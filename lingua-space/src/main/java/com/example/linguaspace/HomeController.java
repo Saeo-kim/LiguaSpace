@@ -16,4 +16,9 @@ public class HomeController {
     public String vocabulary() {
         return "vocabulary";
     }
+
+    @GetMapping("/korean")
+    public String korean() {
+        return "korean";
+    }
 }
