@@ -1,0 +1,845 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vocabulary | Lingua Space</title>
+
+    <style>
+        :root {
+            --background: #F8F8F3;
+            --surface: #FFFFFF;
+            --sage: #72866D;
+            --sage-light: #E8EDE4;
+            --text: #30372F;
+            --muted: #858A80;
+            --border: #E8E9E1;
+            --accent: #F1EDE3;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: Arial, "Malgun Gothic", sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .navbar {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 16px 7%;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--sage);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            color: #70766C;
+            font-size: 13px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--sage);
+        }
+
+        .container {
+            width: min(1080px, 88%);
+            margin: 0 auto;
+            padding: 48px 0 80px;
+        }
+
+        .eyebrow {
+            color: var(--sage);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            margin: 8px 0;
+            font-family: Georgia, "Malgun Gothic", serif;
+            font-size: clamp(32px, 5vw, 44px);
+            font-weight: 500;
+            letter-spacing: -1.5px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .word-count {
+            min-width: 110px;
+            padding: 14px 18px;
+            background: var(--sage-light);
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .word-count strong {
+            display: block;
+            color: var(--sage);
+            font-size: 25px;
+            font-weight: 600;
+        }
+
+        .word-count span {
+            color: #687664;
+            font-size: 11px;
+        }
+
+        .section-card {
+            padding: 28px;
+            margin-bottom: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+        }
+
+        .section-heading {
+            margin: 0 0 6px;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .section-description {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            color: #51594E;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .field input,
+        .field select,
+        .field textarea,
+        .search-input {
+            width: 100%;
+            min-width: 0;
+            padding: 12px 14px;
+            color: var(--text);
+            background: #FDFDFB;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus,
+        .search-input:focus {
+            border-color: var(--sage);
+        }
+
+        .field textarea {
+            min-height: 76px;
+            resize: vertical;
+        }
+
+        .primary-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            color: white;
+            background: var(--sage);
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .primary-button:hover {
+            background: #5D7258;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 22px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .toolbar h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .search-box {
+            width: min(300px, 100%);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+
+        .filter-button {
+            padding: 8px 15px;
+            color: #73796F;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            font-size: 12px;
+        }
+
+        .filter-button.active {
+            color: #FFFFFF;
+            background: var(--sage);
+            border-color: var(--sage);
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .word-card {
+            position: relative;
+            min-width: 0;
+            padding: 23px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .word-card:hover {
+            border-color: #C6D1C0;
+            transform: translateY(-2px);
+        }
+
+        .word-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .language-tag {
+            display: inline-block;
+            padding: 5px 9px;
+            color: #64765E;
+            background: var(--sage-light);
+            border-radius: 6px;
+            font-size: 10px;
+        }
+
+        .study-status {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .word {
+            margin: 18px 0 2px;
+            font-size: 27px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            overflow-wrap: anywhere;
+        }
+
+        .pronunciation {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .meaning {
+            margin: 15px 0;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .example {
+            padding: 13px;
+            background: #F8F8F4;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .example p {
+            margin: 0 0 5px;
+            overflow-wrap: anywhere;
+        }
+
+        .example p:last-child {
+            margin-bottom: 0;
+            color: var(--muted);
+        }
+
+        .note {
+            margin: 14px 0 0;
+            color: #747A70;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #F0F0EA;
+        }
+
+        .text-button {
+            padding: 5px 8px;
+            color: #777D73;
+            background: transparent;
+            border: none;
+            font-size: 11px;
+        }
+
+        .text-button:hover {
+            color: var(--sage);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 44px 20px;
+            color: var(--muted);
+            text-align: center;
+            background: var(--surface);
+            border: 1px dashed #D9DED3;
+            border-radius: 16px;
+        }
+
+        .empty-state .symbol {
+            margin-bottom: 12px;
+            font-size: 30px;
+        }
+
+        .empty-state strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .footer {
+            padding: 24px;
+            color: #92978D;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 11px;
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 14px;
+                padding: 18px 6%;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 12px;
+            }
+
+            .container {
+                width: 90%;
+                padding-top: 34px;
+            }
+
+            .page-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .word-count {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 9px 15px;
+            }
+
+            .word-count strong {
+                font-size: 20px;
+            }
+
+            .section-card {
+                padding: 20px;
+            }
+
+            .form-grid,
+            .word-list {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a class="logo" href="/">Lingua <span>Space.</span></a>
+
+    <nav class="nav-links">
+        <a href="/">Language Home</a>
+        <a href="/vocabulary" class="active">My Vocabulary</a>
+        <a href="#">Reading &amp; Expression</a>
+        <a href="#">Learning Archive</a>
+        <a href="/">Language</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="page-heading">
+        <div>
+            <div class="eyebrow">Your personal language archive</div>
+            <h1>My Vocabulary</h1>
+            <p class="subtitle">
+                Collect the words you meet. Keep the expressions you love.
+            </p>
+        </div>
+
+        <div class="word-count">
+            <strong>0</strong>
+            <span>words collected</span>
+        </div>
+    </section>
+
+    <section class="section-card">
+        <h2 class="section-heading">Add a new word</h2>
+        <p class="section-description">
+            Save a word, an expression, or something you want to remember.
+        </p>
+
+        <form action="#" method="get">
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="language">Language</label>
+                    <select id="language" name="language">
+                        <option value="zh">Chinese · 中文</option>
+                        <option value="ja">Japanese · 日本語</option>
+                        <option value="es">Spanish · Español</option>
+                        <option value="ko">Korean · 한국어</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="word">Word or expression</label>
+                    <input id="word" name="word"
+                           placeholder="e.g. 慢慢来" required>
+                </div>
+
+                <div class="field">
+                    <label for="pronunciation">Pronunciation</label>
+                    <input id="pronunciation" name="pronunciation"
+                           placeholder="e.g. màn man lái">
+                </div>
+
+                <div class="field">
+                    <label for="meaning">Meaning in Korean</label>
+                    <input id="meaning" name="meaning"
+                           placeholder="e.g. 천천히 해도 돼">
+                </div>
+
+                <div class="field full">
+                    <label for="example">Example sentence</label>
+                    <textarea id="example" name="example"
+                              placeholder="Write an example in the language you're learning."></textarea>
+                </div>
+
+                <div class="field full">
+                    <label for="translation">Example translation</label>
+                    <textarea id="translation" name="translation"
+                              placeholder="이 예문이 한국어로 어떤 뜻인지 적어 보세요."></textarea>
+                </div>
+
+                <div class="field full">
+                    <label for="note">Personal note · Context</label>
+                    <textarea id="note" name="note"
+                              placeholder="Where did you find this? When would you use it? Why do you like it?"></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="primary-button">
+                    + Add to my collection
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <section>
+        <div class="toolbar">
+            <h2>Your collection</h2>
+
+            <div class="search-box">
+                <input class="search-input" type="search"
+                       placeholder="Search words or meanings..."
+                       aria-label="Search vocabulary">
+            </div>
+        </div>
+
+        <div class="filters">
+            <button type="button" class="filter-button active">All languages</button>
+            <button type="button" class="filter-button">中文 Chinese</button>
+            <button type="button" class="filter-button">日本語 Japanese</button>
+            <button type="button" class="filter-button">Español Spanish</button>
+            <button type="button" class="filter-button">한국어 Korean</button>
+        </div>
+
+        <div class="word-list">
+
+            <article class="word-card">
+                <div class="word-top">
+                    <span class="language-tag">中文 · Chinese</span>
+                    <span class="study-status">Sample entry</span>
+                </div>
+
+                <h3 class="word">慢慢来</h3>
+                <div class="pronunciation">màn man lái · 만만라이</div>
+                <p class="meaning">천천히 해도 돼 · 서두르지 마</p>
+
+                <div class="example">
+                    <p>别着急，慢慢来。</p>
+                    <p>서두르지 말고 천천히 해.</p>
+                </div>
+
+                <p class="note">
+                    A gentle reminder to take your time.
+                </p>
+
+                <div class="card-actions">
+                    <button type="button" class="text-button">○ Mark as learned</button>
+                    <button type="button" class="text-button">Edit</button>
+                    <button type="button" class="text-button">Delete</button>
+                </div>
+            </article>
+
+            <article class="word-card">
+                <div class="word-top">
+                    <span class="language-tag">日本語 · Japanese</span>
+                    <span class="study-status">Sample entry</span>
+                </div>
+
+                <h3 class="word">自分らしく</h3>
+                <div class="pronunciation">じぶんらしく · jibun rashiku</div>
+                <p class="meaning">나다운 모습으로</p>
+
+                <div class="example">
+                    <p>自分らしく生きたい。</p>
+                    <p>나다운 모습으로 살고 싶어.</p>
+                </div>
+
+                <p class="note">
+                    An expression about living in your own way.
+                </p>
+
+                <div class="card-actions">
+                    <button type="button" class="text-button">○ Mark as learned</button>
+                    <button type="button" class="text-button">Edit</button>
+                    <button type="button" class="text-button">Delete</button>
+                </div>
+            </article>
+
+            <article class="word-card">
+                <div class="word-top">
+                    <span class="language-tag">Español · Spanish</span>
+                    <span class="study-status">Sample entry</span>
+                </div>
+
+                <h3 class="word">Poco a poco</h3>
+                <div class="pronunciation">포코 아 포코</div>
+                <p class="meaning">조금씩, 천천히</p>
+
+                <div class="example">
+                    <p>Estoy aprendiendo poco a poco.</p>
+                    <p>나는 조금씩 배우고 있어.</p>
+                </div>
+
+                <p class="note">
+                    Progress doesn't have to happen all at once.
+                </p>
+
+                <div class="card-actions">
+                    <button type="button" class="text-button">○ Mark as learned</button>
+                    <button type="button" class="text-button">Edit</button>
+                    <button type="button" class="text-button">Delete</button>
+                </div>
+            </article>
+
+            <article class="word-card">
+                <div class="word-top">
+                    <span class="language-tag">한국어 · Korean</span>
+                    <span class="study-status">Sample entry</span>
+                </div>
+
+                <h3 class="word">여운</h3>
+                <div class="pronunciation">yeoun</div>
+                <p class="meaning">어떤 경험이 끝난 뒤에도 남아 있는 느낌</p>
+
+                <div class="example">
+                    <p>그 영화는 긴 여운을 남겼다.</p>
+                    <p>The movie left a lasting impression.</p>
+                </div>
+
+                <p class="note">
+                    A feeling or impression that stays with you.
+                </p>
+
+                <div class="card-actions">
+                    <button type="button" class="text-button">○ Mark as learned</button>
+                    <button type="button" class="text-button">Edit</button>
+                    <button type="button" class="text-button">Delete</button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    Lingua Space · A quiet place for everything you learn.
+</footer>
+
+<script>
+    // 단어 등록 폼과 단어 목록을 가져옵니다.
+    const form = document.querySelector(".section-card form");
+    const wordList = document.querySelector(".word-list");
+
+    // 단어 등록 버튼을 눌렀을 때 실행합니다.
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // 입력한 값을 가져옵니다.
+        const language = document.querySelector("#language");
+        const word = document.querySelector("#word").value.trim();
+        const pronunciation = document.querySelector("#pronunciation").value.trim();
+        const meaning = document.querySelector("#meaning").value.trim();
+        const example = document.querySelector("#example").value.trim();
+        const translation = document.querySelector("#translation").value.trim();
+        const note = document.querySelector("#note").value.trim();
+
+        // 단어와 뜻을 입력했는지 확인합니다.
+        if (!word || !meaning) {
+            alert("단어와 한국어 뜻을 입력해 주세요.");
+            return;
+        }
+
+        // 선택한 언어의 이름을 가져옵니다.
+        const languageNames = {
+            zh: "中文 · Chinese",
+            ja: "日本語 · Japanese",
+            es: "Español · Spanish",
+            ko: "한국어 · Korean"
+        };
+
+        // HTML 요소를 안전하게 만들기 위한 함수입니다.
+        function makeElement(tag, className, text) {
+            const element = document.createElement(tag);
+            element.className = className;
+            element.textContent = text;
+            return element;
+        }
+
+        // 새로운 단어 카드를 만듭니다.
+        const card = document.createElement("article");
+        card.className = "word-card";
+
+        const top = document.createElement("div");
+        top.className = "word-top";
+
+        top.appendChild(
+            makeElement(
+                "span",
+                "language-tag",
+                languageNames[language.value]
+            )
+        );
+
+        top.appendChild(
+            makeElement("span", "study-status", "Just added")
+        );
+
+        const wordTitle = makeElement("h3", "word", word);
+        const pronunciationText = makeElement(
+            "div",
+            "pronunciation",
+            pronunciation || "Pronunciation not added"
+        );
+        const meaningText = makeElement("p", "meaning", meaning);
+
+        card.appendChild(top);
+        card.appendChild(wordTitle);
+        card.appendChild(pronunciationText);
+        card.appendChild(meaningText);
+
+        // 예문 또는 해석이 있을 때만 표시합니다.
+        if (example || translation) {
+            const exampleBox = document.createElement("div");
+            exampleBox.className = "example";
+
+            if (example) {
+                exampleBox.appendChild(
+                    makeElement("p", "", example)
+                );
+            }
+
+            if (translation) {
+                exampleBox.appendChild(
+                    makeElement("p", "", translation)
+                );
+            }
+
+            card.appendChild(exampleBox);
+        }
+
+        // 개인 메모가 있을 때만 표시합니다.
+        if (note) {
+            card.appendChild(
+                makeElement("p", "note", note)
+            );
+        }
+
+        // 학습 상태 버튼을 추가합니다.
+        const actions = document.createElement("div");
+        actions.className = "card-actions";
+
+        const learnedButton = makeElement(
+            "button",
+            "text-button",
+            "○ Mark as learned"
+        );
+        learnedButton.type = "button";
+
+        learnedButton.addEventListener("click", function () {
+            const learned = learnedButton.dataset.learned === "true";
+
+            learnedButton.dataset.learned = String(!learned);
+            learnedButton.textContent = learned
+                ? "○ Mark as learned"
+                : "✓ Learned";
+
+            top.querySelector(".study-status").textContent = learned
+                ? "Just added"
+                : "Learned";
+        });
+
+        actions.appendChild(learnedButton);
+        card.appendChild(actions);
+
+        // 샘플 카드가 아닌 새 단어를 목록 맨 앞에 표시합니다.
+        wordList.prepend(card);
+
+        // 단어 수를 갱신합니다.
+        const count = wordList.querySelectorAll(".word-card").length;
+        document.querySelector(".word-count strong").textContent = count;
+
+        // 입력 폼을 비웁니다.
+        form.reset();
+
+        alert("Your new word has been added!");
+    });
+
+    // type="button"인 등록 버튼도 폼 제출을 실행하도록 연결합니다.
+    const addButton = form.querySelector(".primary-button");
+
+    addButton.addEventListener("click", function () {
+        form.requestSubmit();
+    });
+</script>
+</body>
+</html>
+
+</body>
+</html>

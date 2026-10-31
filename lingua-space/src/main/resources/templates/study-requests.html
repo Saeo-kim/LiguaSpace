@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lingua Space - Study Requests</title>
+</head>
+<body>
+<h1>What do you want to learn?</h1>
+
+<form th:action="@{/study-requests}"
+      th:object="${studyRequest}"
+      method="post">
+
+    <label>Language</label>
+    <select th:field="*{language}" required>
+        <option value="">Select a language</option>
+        <option value="English">English</option>
+        <option value="Japanese">Japanese</option>
+        <option value="Chinese">Chinese</option>
+        <option value="Spanish">Spanish</option>
+        <option value="Korean">Korean</option>
+        <option value="French">French</option>
+        <option value="German">German</option>
+        <option value="Italian">Italian</option>
+        <option value="Vietnamese">Vietnamese</option>
+        <option value="Filipino">Filipino</option>
+    </select>
+
+    <p>
+        <label>My goal</label><br>
+        <input type="text" th:field="*{goal}"
+               placeholder="e.g. Travel conversation"
+               maxlength="100" required>
+    </p>
+
+    <p>
+        <label>What do you want to learn?</label><br>
+        <textarea th:field="*{topic}"
+                  placeholder="e.g. Ordering food at a restaurant"
+                  maxlength="1000" required></textarea>
+    </p>
+
+    <p>
+        <label>What is difficult for you?</label><br>
+        <textarea th:field="*{difficultPart}"
+                  placeholder="e.g. I don't know how to speak politely"
+                  maxlength="1000"></textarea>
+    </p>
+
+    <button type="submit">Save my study request</button>
+</form>
+
+<hr>
+
+<h2>Saved study requests</h2>
+
+<p th:if="${#lists.isEmpty(requests)}">
+    No study requests yet.
+</p>
+
+<article th:each="request : ${requests}">
+    <h3 th:text="${request.language}">English</h3>
+    <p>
+        Goal:
+        <span th:text="${request.goal}"></span>
+    </p>
+    <p th:text="${request.topic}"></p>
+    <p th:text="${request.difficultPart}"></p>
+    <small th:text="${request.createdAt}"></small>
+    <hr>
+</article>
+</body>
+</html>
