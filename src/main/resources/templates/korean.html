@@ -148,7 +148,7 @@
                     <input id="entryQuestion" maxlength="240" placeholder="예: 비슷한 단어와 어떤 차이가 있을까?">
                 </div>
                 <button class="primary" type="submit">아카이브에 저장하기</button>
-                <p class="notice">현재 기록은 이 브라우저의 저장 공간에 보관됩니다. 다른 기기와 자동 동기화되지는 않아요.</p>
+                <p class="notice">기록은 서버에 저장됩니다. 같은 아카이브를 여러 기기에서 공유할 수 있어요.</p>
             </form>
         </section>
 
@@ -206,45 +206,132 @@
 </div>
 
 <script>
+    const API_URL = "/api/korean-entries";
     const STORAGE_KEY = "lingua-space-korean-archive-v1";
+
     const form = document.getElementById("entryForm");
     const entriesElement = document.getElementById("entries");
     const searchInput = document.getElementById("searchInput");
     const filterType = document.getElementById("filterType");
-    let entries = loadEntries();
 
-    function loadEntries() {
-        try {
-            const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            return Array.isArray(saved) ? saved : [];
-        } catch {
-            return [];
+    let entries = [];
+
+    // 서버 응답 처리
+    async function request(url, options = {}) {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(`서버 오류: ${response.status}`);
         }
+
+        if (response.status === 204) {
+            return null;
+        }
+
+        return response.json();
     }
 
-    function saveEntries() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    // 기존 PC 브라우저 기록을 서버로 한 번 옮기기
+    async function migrateOldEntries() {
+        const oldData = localStorage.getItem(STORAGE_KEY);
+
+        if (!oldData) return;
+
+        let oldEntries;
+
+        try {
+            oldEntries = JSON.parse(oldData);
+        } catch {
+            alert("기존 기록을 읽을 수 없어요. 기록 내보내기로 백업을 확인해 주세요.");
+            throw new Error("기존 기록 JSON 오류");
+        }
+
+        if (!Array.isArray(oldEntries) || oldEntries.length === 0) {
+            localStorage.removeItem(STORAGE_KEY);
+            return;
+        }
+
+        for (const entry of oldEntries) {
+            await request(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: entry.title,
+                    type: entry.type,
+                    source: entry.source,
+                    note: entry.note,
+                    question: entry.question
+                })
+            });
+        }
+
+        // 모든 기록이 서버에 저장된 뒤에만 기존 데이터 삭제
+        localStorage.removeItem(STORAGE_KEY);
+
+        alert(`${oldEntries.length}개의 기존 기록을 서버로 옮겼어요.`);
+    }
+
+    // 서버에서 전체 기록 가져오기
+    async function loadEntries() {
+        try {
+            await migrateOldEntries();
+            entries = await request(API_URL);
+            renderEntries();
+        } catch (error) {
+            console.error(error);
+            entriesElement.innerHTML =
+                '<div class="empty">기록을 불러오지 못했어요. 새로고침해 주세요.</div>';
+        }
     }
 
     function safeText(value) {
         return String(value ?? "").replace(/[&<>"']/g, char => ({
-            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
         })[char]);
     }
 
+    function formatDate(value) {
+        if (!value) return "";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) return "";
+
+        return date.toLocaleString("ko-KR");
+    }
+
+    // 화면에 기록 표시
     function renderEntries() {
         const query = searchInput.value.trim().toLowerCase();
         const type = filterType.value;
+
         const filtered = entries.filter(entry => {
-            const text = [entry.title, entry.note, entry.question, entry.source, entry.type].join(" ").toLowerCase();
-            return (!query || text.includes(query)) && (!type || entry.type === type);
+            const text = [
+                entry.title,
+                entry.note,
+                entry.question,
+                entry.source,
+                entry.type
+            ].join(" ").toLowerCase();
+
+            return (!query || text.includes(query))
+                && (!type || entry.type === type);
         });
 
         document.getElementById("entryCount").textContent =
             `총 ${entries.length}개의 기록 · 화면에 ${filtered.length}개 표시`;
 
         if (filtered.length === 0) {
-            entriesElement.innerHTML = `<div class="empty">${entries.length ? "검색 결과가 없어요." : "아직 기록이 없어요.<br>첫 번째 발견을 남겨보세요."}</div>`;
+            entriesElement.innerHTML =
+                `<div class="empty">${entries.length
+                    ? "검색 결과가 없어요."
+                    : "아직 기록이 없어요.<br>첫 번째 발견을 남겨보세요."}</div>`;
             return;
         }
 
@@ -253,58 +340,112 @@
                 <div class="entry-top">
                     <div>
                         <div class="entry-title">${safeText(entry.title)}</div>
-                        <div class="entry-meta">${safeText(entry.date)}${entry.source ? " · " + safeText(entry.source) : ""}</div>
+                        <div class="entry-meta">
+                            ${safeText(formatDate(entry.createdAt))}
+                            ${entry.source ? " · " + safeText(entry.source) : ""}
+                        </div>
                     </div>
-                    <button class="delete" type="button" data-delete="${safeText(entry.id)}" aria-label="기록 삭제">삭제</button>
+                    <button class="delete" type="button"
+                        data-delete="${safeText(entry.id)}"
+                        aria-label="기록 삭제">삭제</button>
                 </div>
-                ${entry.note ? `<div class="entry-body">${safeText(entry.note)}</div>` : ""}
-                ${entry.question ? `<div class="entry-body"><strong>더 알아볼 점:</strong> ${safeText(entry.question)}</div>` : ""}
+
+                ${entry.note
+            ? `<div class="entry-body">${safeText(entry.note)}</div>`
+            : ""}
+
+                ${entry.question
+            ? `<div class="entry-body"><strong>더 알아볼 점:</strong>
+                       ${safeText(entry.question)}</div>`
+            : ""}
+
                 <span class="entry-tag">${safeText(entry.type)}</span>
             </article>
         `).join("");
     }
 
-    form.addEventListener("submit", event => {
+    // 새 기록 서버에 저장
+    form.addEventListener("submit", async event => {
         event.preventDefault();
+
         const title = document.getElementById("entryTitle").value.trim();
+
         if (!title) return;
 
-        entries.unshift({
-            id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())),
+        const newEntry = {
             title,
             type: document.getElementById("entryType").value,
             source: document.getElementById("entrySource").value.trim(),
             note: document.getElementById("entryNote").value.trim(),
-            question: document.getElementById("entryQuestion").value.trim(),
-            date: new Date().toLocaleString("ko-KR")
-        });
-        saveEntries();
-        form.reset();
-        renderEntries();
+            question: document.getElementById("entryQuestion").value.trim()
+        };
+
+        try {
+            await request(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newEntry)
+            });
+
+            form.reset();
+            entries = await request(API_URL);
+            renderEntries();
+
+        } catch (error) {
+            console.error(error);
+            alert("저장에 실패했어요. 인터넷 연결을 확인해 주세요.");
+        }
     });
 
-    entriesElement.addEventListener("click", event => {
+    // 서버에서 기록 삭제
+    entriesElement.addEventListener("click", async event => {
         const button = event.target.closest("[data-delete]");
+
         if (!button) return;
-        entries = entries.filter(entry => entry.id !== button.dataset.delete);
-        saveEntries();
-        renderEntries();
+
+        const id = button.dataset.delete;
+
+        if (!confirm("이 기록을 삭제할까요?")) return;
+
+        try {
+            await request(`${API_URL}/${id}`, {
+                method: "DELETE"
+            });
+
+            entries = await request(API_URL);
+            renderEntries();
+
+        } catch (error) {
+            console.error(error);
+            alert("삭제에 실패했어요.");
+        }
     });
 
+    // 검색 및 종류별 필터
     searchInput.addEventListener("input", renderEntries);
     filterType.addEventListener("change", renderEntries);
 
+    // JSON 내보내기
     document.getElementById("exportButton").addEventListener("click", () => {
-        const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json;charset=utf-8" });
+        const blob = new Blob(
+            [JSON.stringify(entries, null, 2)],
+            { type: "application/json;charset=utf-8" }
+        );
+
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
+
         link.href = url;
         link.download = "korean-archive.json";
         link.click();
+
         URL.revokeObjectURL(url);
     });
 
-    renderEntries();
+    // 페이지가 열리면 서버에서 기록 가져오기
+    loadEntries();
 </script>
 </body>
 </html>
