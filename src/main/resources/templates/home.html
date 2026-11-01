@@ -2,8 +2,12 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lingua Space</title>
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#B9A3E8">
+    <link rel="apple-touch-icon" href="/images/lingua-space-icon-192.png">
+
     <style>
         * { box-sizing: border-box; }
 
@@ -608,6 +612,18 @@
 
     renderTabs();
     renderDirectory();
+
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/sw.js")
+                .then(registration => {
+                    console.log("Lingua Space PWA registered:", registration.scope);
+                })
+                .catch(error => {
+                    console.error("PWA registration failed:", error);
+                });
+        });
+    }
 </script>
 </body>
 </html>
