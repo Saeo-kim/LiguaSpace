@@ -1,4 +1,6 @@
-# LiguaSpace
+# Lingua Space
+
+> Product name: **Lingua Space**. The GitHub repository (`LiguaSpace`) and the Java package (`com.example.linguaspace`) keep their original technical names.
 
 ## Run locally without PostgreSQL
 
