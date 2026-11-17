@@ -38,3 +38,6 @@ out/
 
 # Local database files
 data/
+
+# Local DB credentials
+src/main/resources/application-local.properties

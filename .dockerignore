@@ -1,0 +1,10 @@
+.git
+.gradle
+.idea
+build
+data
+lingua-space
+*.iml
+*.txt
+HELP.md
+git commit*

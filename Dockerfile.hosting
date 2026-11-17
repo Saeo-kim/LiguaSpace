@@ -1,0 +1,18 @@
+# Image for the new host. The original Dockerfile is left unchanged for the running Render service.
+FROM eclipse-temurin:21-jdk AS build
+WORKDIR /app
+COPY gradlew settings.gradle build.gradle ./
+COPY gradle ./gradle
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew && ./gradlew --no-daemon dependencies > /dev/null
+COPY src ./src
+RUN ./gradlew --no-daemon bootJar -x test && cp build/libs/*-SNAPSHOT.jar /app/app.jar
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+RUN useradd --system --no-create-home appuser
+COPY --from=build /app/app.jar app.jar
+USER appuser
+EXPOSE 8080
+# Tuned for a 512 MB shared-CPU machine.
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=65 -XX:+UseSerialGC -Xss512k -XX:TieredStopAtLevel=1 -Dfile.encoding=UTF-8"
+ENTRYPOINT ["java", "-jar", "app.jar"]

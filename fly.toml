@@ -1,0 +1,38 @@
+# Fly.io configuration. Secrets are set with `fly secrets set`, never in this file.
+# Change `app` if the name is already taken. Change `primary_region` to match the database region.
+app = "lingua-space"
+primary_region = "nrt"
+
+[build]
+  dockerfile = "Dockerfile.hosting"
+
+[env]
+  TZ = "Asia/Seoul"
+  DB_POOL_SIZE = "5"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Keep one machine running at all times, so there are no cold starts.
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 100
+    hard_limit = 200
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/healthz"
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "60s"
+
+[deploy]
+  strategy = "rolling"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
