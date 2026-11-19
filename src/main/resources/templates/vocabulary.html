@@ -463,39 +463,41 @@
 </head>
 
 <body>
+<script src="/js/i18n.js"></script>
 
 <header class="navbar">
     <a class="logo" href="/">Lingua <span>Space.</span></a>
 
     <nav class="nav-links">
-        <a href="/">Language Home</a>
-        <a href="/vocabulary" class="active">My Vocabulary</a>
-        <a href="#">Reading &amp; Expression</a>
-        <a href="#">Learning Archive</a>
-        <a href="/">Language</a>
+        <a href="/" data-i18n="nav.languageHome">Language Home</a>
+        <a href="/vocabulary" class="active" data-i18n="nav.vocab">My Vocabulary</a>
+        <a href="#" data-i18n="nav.reading">Reading &amp; Expression</a>
+        <a href="#" data-i18n="nav.archive">Learning Archive</a>
+        <a href="/" data-i18n="nav.language">Language</a>
     </nav>
+    <div class="ls-picker-slot"><select class="ls-lang-picker" data-lang-picker data-i18n-aria="ui.picker" aria-label="Interface language"></select></div>
 </header>
 
 <main class="container">
 
     <section class="page-heading">
         <div>
-            <div class="eyebrow">Your personal language archive</div>
-            <h1>My Vocabulary</h1>
-            <p class="subtitle">
+            <div class="eyebrow" data-i18n="vocab.eyebrow">Your personal language archive</div>
+            <h1 data-i18n="nav.vocab">My Vocabulary</h1>
+            <p class="subtitle" data-i18n="vocab.subtitle">
                 Collect the words you meet. Keep the expressions you love.
             </p>
         </div>
 
         <div class="word-count">
             <strong>0</strong>
-            <span>words collected</span>
+            <span data-i18n="vocab.wordsCollected">words collected</span>
         </div>
     </section>
 
     <section class="section-card">
-        <h2 class="section-heading">Add a new word</h2>
-        <p class="section-description">
+        <h2 class="section-heading" data-i18n="vocab.addTitle">Add a new word</h2>
+        <p class="section-description" data-i18n="vocab.addDesc">
             Save a word, an expression, or something you want to remember.
         </p>
 
@@ -503,7 +505,7 @@
             <div class="form-grid">
 
                 <div class="field">
-                    <label for="language">Language</label>
+                    <label for="language" data-i18n="vocab.fLanguage">Language</label>
                     <select id="language" name="language">
                         <option value="zh">Chinese · 中文</option>
                         <option value="ja">Japanese · 日本語</option>
@@ -513,45 +515,45 @@
                 </div>
 
                 <div class="field">
-                    <label for="word">Word or expression</label>
+                    <label for="word" data-i18n="vocab.fWord">Word or expression</label>
                     <input id="word" name="word"
                            placeholder="e.g. 慢慢来" required>
                 </div>
 
                 <div class="field">
-                    <label for="pronunciation">Pronunciation</label>
+                    <label for="pronunciation" data-i18n="vocab.fPron">Pronunciation</label>
                     <input id="pronunciation" name="pronunciation"
                            placeholder="e.g. màn man lái">
                 </div>
 
                 <div class="field">
-                    <label for="meaning">Meaning in Korean</label>
+                    <label for="meaning" data-i18n="vocab.fMeaning">Meaning in Korean</label>
                     <input id="meaning" name="meaning"
                            placeholder="e.g. 천천히 해도 돼">
                 </div>
 
                 <div class="field full">
-                    <label for="example">Example sentence</label>
+                    <label for="example" data-i18n="vocab.fExample">Example sentence</label>
                     <textarea id="example" name="example"
-                              placeholder="Write an example in the language you're learning."></textarea>
+                              placeholder="Write an example in the language you're learning." data-i18n-ph="vocab.phExample"></textarea>
                 </div>
 
                 <div class="field full">
-                    <label for="translation">Example translation</label>
+                    <label for="translation" data-i18n="vocab.fExampleTr">Example translation</label>
                     <textarea id="translation" name="translation"
-                              placeholder="이 예문이 한국어로 어떤 뜻인지 적어 보세요."></textarea>
+                              placeholder="이 예문이 한국어로 어떤 뜻인지 적어 보세요." data-i18n-ph="vocab.phTr"></textarea>
                 </div>
 
                 <div class="field full">
-                    <label for="note">Personal note · Context</label>
+                    <label for="note" data-i18n="vocab.fNote">Personal note · Context</label>
                     <textarea id="note" name="note"
-                              placeholder="Where did you find this? When would you use it? Why do you like it?"></textarea>
+                              placeholder="Where did you find this? When would you use it? Why do you like it?" data-i18n-ph="vocab.phNote"></textarea>
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <button type="button" class="primary-button">
+                <button type="button" class="primary-button" data-i18n="vocab.addBtn">
                     + Add to my collection
                 </button>
             </div>
@@ -560,17 +562,17 @@
 
     <section>
         <div class="toolbar">
-            <h2>Your collection</h2>
+            <h2 data-i18n="vocab.collection">Your collection</h2>
 
             <div class="search-box">
                 <input class="search-input" type="search"
-                       placeholder="Search words or meanings..."
-                       aria-label="Search vocabulary">
+                       placeholder="Search words or meanings..." data-i18n-ph="vocab.searchPh"
+                       aria-label="Search vocabulary" data-i18n-aria="vocab.searchAria">
             </div>
         </div>
 
         <div class="filters">
-            <button type="button" class="filter-button active">All languages</button>
+            <button type="button" class="filter-button active" data-i18n="lp.allLanguages">All languages</button>
             <button type="button" class="filter-button">中文 Chinese</button>
             <button type="button" class="filter-button">日本語 Japanese</button>
             <button type="button" class="filter-button">Español Spanish</button>
@@ -582,7 +584,7 @@
             <article class="word-card">
                 <div class="word-top">
                     <span class="language-tag">中文 · Chinese</span>
-                    <span class="study-status">Sample entry</span>
+                    <span class="study-status" data-i18n="vocab.sample">Sample entry</span>
                 </div>
 
                 <h3 class="word">慢慢来</h3>
@@ -599,16 +601,16 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button">○ Mark as learned</button>
-                    <button type="button" class="text-button">Edit</button>
-                    <button type="button" class="text-button">Delete</button>
+                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
+                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
+                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
                 </div>
             </article>
 
             <article class="word-card">
                 <div class="word-top">
                     <span class="language-tag">日本語 · Japanese</span>
-                    <span class="study-status">Sample entry</span>
+                    <span class="study-status" data-i18n="vocab.sample">Sample entry</span>
                 </div>
 
                 <h3 class="word">自分らしく</h3>
@@ -625,16 +627,16 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button">○ Mark as learned</button>
-                    <button type="button" class="text-button">Edit</button>
-                    <button type="button" class="text-button">Delete</button>
+                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
+                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
+                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
                 </div>
             </article>
 
             <article class="word-card">
                 <div class="word-top">
                     <span class="language-tag">Español · Spanish</span>
-                    <span class="study-status">Sample entry</span>
+                    <span class="study-status" data-i18n="vocab.sample">Sample entry</span>
                 </div>
 
                 <h3 class="word">Poco a poco</h3>
@@ -651,16 +653,16 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button">○ Mark as learned</button>
-                    <button type="button" class="text-button">Edit</button>
-                    <button type="button" class="text-button">Delete</button>
+                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
+                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
+                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
                 </div>
             </article>
 
             <article class="word-card">
                 <div class="word-top">
                     <span class="language-tag">한국어 · Korean</span>
-                    <span class="study-status">Sample entry</span>
+                    <span class="study-status" data-i18n="vocab.sample">Sample entry</span>
                 </div>
 
                 <h3 class="word">여운</h3>
@@ -677,9 +679,9 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button">○ Mark as learned</button>
-                    <button type="button" class="text-button">Edit</button>
-                    <button type="button" class="text-button">Delete</button>
+                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
+                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
+                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
                 </div>
             </article>
 
@@ -688,7 +690,7 @@
 
 </main>
 
-<footer class="footer">
+<footer class="footer" data-i18n="vocab.footer">
     Lingua Space · A quiet place for everything you learn.
 </footer>
 
@@ -712,7 +714,7 @@
 
         // 단어와 뜻을 입력했는지 확인합니다.
         if (!word || !meaning) {
-            alert("단어와 한국어 뜻을 입력해 주세요.");
+            alert(LS.t("vocab.alertMissing"));
             return;
         }
 
@@ -748,14 +750,14 @@
         );
 
         top.appendChild(
-            makeElement("span", "study-status", "Just added")
+            makeElement("span", "study-status", LS.t("vocab.justAdded"))
         );
 
         const wordTitle = makeElement("h3", "word", word);
         const pronunciationText = makeElement(
             "div",
             "pronunciation",
-            pronunciation || "Pronunciation not added"
+            pronunciation || LS.t("vocab.pronNotAdded")
         );
         const meaningText = makeElement("p", "meaning", meaning);
 
@@ -798,7 +800,7 @@
         const learnedButton = makeElement(
             "button",
             "text-button",
-            "○ Mark as learned"
+            LS.t("vocab.markLearned")
         );
         learnedButton.type = "button";
 
@@ -807,12 +809,12 @@
 
             learnedButton.dataset.learned = String(!learned);
             learnedButton.textContent = learned
-                ? "○ Mark as learned"
-                : "✓ Learned";
+                ? LS.t("vocab.markLearned")
+                : LS.t("vocab.learned");
 
             top.querySelector(".study-status").textContent = learned
-                ? "Just added"
-                : "Learned";
+                ? LS.t("vocab.justAdded")
+                : LS.t("vocab.statusLearned");
         });
 
         actions.appendChild(learnedButton);
@@ -828,7 +830,7 @@
         // 입력 폼을 비웁니다.
         form.reset();
 
-        alert("Your new word has been added!");
+        alert(LS.t("vocab.alertAdded"));
     });
 
     // type="button"인 등록 버튼도 폼 제출을 실행하도록 연결합니다.
