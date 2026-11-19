@@ -1,0 +1,24 @@
+# CI bot: builds Lingua Space and runs its tests on an in-memory H2 database.
+name: CI
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: jdbc:h2:mem:ci;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+      DATABASE_USERNAME: sa
+      DATABASE_PASSWORD: ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+      - run: chmod +x gradlew
+      - run: ./gradlew test --no-daemon

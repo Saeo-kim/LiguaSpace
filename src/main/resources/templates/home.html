@@ -6,6 +6,7 @@
 
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#B9A3E8">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/lingua-space-icon-192.png">
     <link rel="apple-touch-icon" href="/images/lingua-space-icon-192.png">
 
     <style>
@@ -329,18 +330,20 @@
     </style>
 </head>
 <body>
+<script src="/js/i18n.js"></script>
 <div class="layout">
     <aside class="sidebar">
         <a href="/" class="logo">
             Lingua <span>Space.</span>
         </a>
+        <div class="ls-picker-slot"><select class="ls-lang-picker" data-lang-picker data-i18n-aria="ui.picker" aria-label="Interface language"></select></div>
         <nav aria-label="Main navigation">
-            <div class="menu-title">WORKSPACE</div>
-            <button class="menu-item active" type="button" data-page="home">Language Home</button>
-            <a class="menu-item" href="#vocabulary">My Vocabulary</a>
-            <a class="menu-item" href="#reading">Reading &amp; Expression</a>
-            <a class="menu-item" href="#archive">Learning Archive</a>
-            <button class="menu-item" type="button" data-page="languages">Language</button>
+            <div class="menu-title" data-i18n="home.workspace">WORKSPACE</div>
+            <button class="menu-item active" type="button" data-page="home" data-i18n="nav.languageHome">Language Home</button>
+            <a class="menu-item" href="#vocabulary" data-i18n="nav.vocab">My Vocabulary</a>
+            <a class="menu-item" href="#reading" data-i18n="nav.reading">Reading &amp; Expression</a>
+            <a class="menu-item" href="#archive" data-i18n="nav.archive">Learning Archive</a>
+            <button class="menu-item" type="button" data-page="languages" data-i18n="nav.language">Language</button>
         </nav>
     </aside>
 
@@ -349,50 +352,50 @@
         <div id="homePage">
             <header class="topline">
                 <div>
-                    <div class="eyebrow">YOUR PERSONAL LANGUAGE SPACE</div>
-                    <h1>언어를 모으고, 나를 넓히는 곳.</h1>
+                    <div class="eyebrow" data-i18n="home.eyebrow">YOUR PERSONAL LANGUAGE SPACE</div>
+                    <h1 data-i18n="home.title">언어를 모으고, 나를 넓히는 곳.</h1>
                 </div>
-                <div class="date">MY WORKSPACE</div>
+                <div class="date" data-i18n="home.date">MY WORKSPACE</div>
             </header>
 
             <section class="welcome">
-                <div class="welcome-label">A LITTLE, EVERY DAY</div>
-                <h2>오늘도 새로운 표현을 만나 보세요.</h2>
-                <p>단어 하나부터 긴 문장까지.<br>배우고, 기록하고, 나만의 언어로 만들어 가는 공간입니다.</p>
+                <div class="welcome-label" data-i18n="home.welcomeLabel">A LITTLE, EVERY DAY</div>
+                <h2 data-i18n="home.welcomeTitle">오늘도 새로운 표현을 만나 보세요.</h2>
+                <p data-i18n-html="home.welcomeBody">단어 하나부터 긴 문장까지.<br>배우고, 기록하고, 나만의 언어로 만들어 가는 공간입니다.</p>
             </section>
 
             <section>
                 <div class="section-heading">
-                    <h2>My Languages</h2>
-                    <span>4 learning spaces</span>
+                    <h2 data-i18n="home.myLanguages">My Languages</h2>
+                    <span data-i18n="home.spaces">4 learning spaces</span>
                 </div>
                 <div class="language-grid">
                     <a class="language-card" href="#chinese">
                         <div class="language-icon">文</div>
-                        <div class="language-name">중국어</div>
+                        <div class="language-name" data-i18n="lang.zh">중국어</div>
                         <div class="language-subtitle">Chinese · 中文</div>
-                        <div class="language-description">성조와 발음부터 자연스러운 문장까지 차근차근.</div>
+                        <div class="language-description" data-i18n="card.zh.desc">성조와 발음부터 자연스러운 문장까지 차근차근.</div>
                         <div class="arrow">↗</div>
                     </a>
                     <a class="language-card" href="#japanese">
                         <div class="language-icon">あ</div>
-                        <div class="language-name">일본어</div>
+                        <div class="language-name" data-i18n="lang.ja">일본어</div>
                         <div class="language-subtitle">Japanese · 日本語</div>
-                        <div class="language-description">일상에서 쓰이는 표현과 문장의 뉘앙스 익히기.</div>
+                        <div class="language-description" data-i18n="card.ja.desc">일상에서 쓰이는 표현과 문장의 뉘앙스 익히기.</div>
                         <div class="arrow">↗</div>
                     </a>
                     <a class="language-card" href="#spanish">
                         <div class="language-icon">ñ</div>
-                        <div class="language-name">스페인어</div>
+                        <div class="language-name" data-i18n="lang.es">스페인어</div>
                         <div class="language-subtitle">Spanish · Español</div>
-                        <div class="language-description">듣고 읽고 말하면서 표현의 폭 넓히기.</div>
+                        <div class="language-description" data-i18n="card.es.desc">듣고 읽고 말하면서 표현의 폭 넓히기.</div>
                         <div class="arrow">↗</div>
                     </a>
                     <a class="language-card" href="/korean">
                         <div class="language-icon">글</div>
-                        <div class="language-name">한국어</div>
+                        <div class="language-name" data-i18n="lang.ko">한국어</div>
                         <div class="language-subtitle">Korean · 한국어</div>
-                        <div class="language-description">어휘, 관용구, 문장력과 섬세한 표현 기르기.</div>
+                        <div class="language-description" data-i18n="card.ko.desc">어휘, 관용구, 문장력과 섬세한 표현 기르기.</div>
                         <div class="arrow">↗</div>
                     </a>
                 </div>
@@ -400,10 +403,10 @@
 
             <section class="bottom-section" id="vocabulary">
                 <div class="section-heading">
-                    <h2>My Learning Desk</h2>
-                    <span>YOUR PERSONAL ARCHIVE</span>
+                    <h2 data-i18n="home.deskTitle">My Learning Desk</h2>
+                    <span data-i18n="home.deskSub">YOUR PERSONAL ARCHIVE</span>
                 </div>
-                <div class="empty-state">
+                <div class="empty-state" data-i18n-html="home.deskEmpty">
                     아직 기록된 학습 내용이 없습니다.<br>
                     앞으로 이곳에 저장한 단어와 문장, 최근 학습 기록을 모아 볼 수 있어요.
                 </div>
@@ -413,9 +416,9 @@
         <!-- Language 전용 화면 -->
         <section id="languagesPage" hidden>
             <header class="language-page-header">
-                <div class="eyebrow">YOUR LANGUAGE DIRECTORY</div>
-                <h1>Language</h1>
-                <p class="language-page-description">
+                <div class="eyebrow" data-i18n="lp.eyebrow">YOUR LANGUAGE DIRECTORY</div>
+                <h1 data-i18n="nav.language">Language</h1>
+                <p class="language-page-description" data-i18n-html="lp.desc">
                     배우고 싶은 언어를 찾아보세요.<br>
                     상단 탭으로 언어를 고르거나, 검색창에서 한국어·영어 이름으로 검색할 수 있어요.
                 </p>
@@ -427,13 +430,13 @@
                     class="language-search-input"
                     id="languageSearch"
                     type="search"
-                    placeholder="Search languages... 예: Japanese, 일본어"
+                    placeholder="Search languages... 예: Japanese, 일본어" data-i18n-ph="lp.searchPh" data-i18n-aria="lp.searchAria"
                     autocomplete="off"
                     aria-label="언어 검색"
                 >
             </label>
 
-            <div class="language-tabs" id="languageTabs" role="tablist" aria-label="언어 선택"></div>
+            <div class="language-tabs" id="languageTabs" role="tablist" data-i18n-aria="lp.tabsAria" aria-label="언어 선택"></div>
 
             <div class="language-list-heading">
                 <h2 id="listHeading">All languages · A–Z</h2>
@@ -441,7 +444,7 @@
             </div>
 
             <div class="language-directory" id="languageDirectory"></div>
-            <div class="no-results" id="noResults" hidden>검색 결과가 없습니다. 다른 언어 이름으로 검색해 보세요.</div>
+            <div class="no-results" id="noResults" data-i18n="lp.noResults" hidden>검색 결과가 없습니다. 다른 언어 이름으로 검색해 보세요.</div>
 
             <div class="selection-note" id="selectionNote" aria-live="polite">
                 선택한 언어가 여기에 표시됩니다.
@@ -481,6 +484,7 @@
 
     let activeLanguageId = "all";
     let selectedLanguageId = localStorage.getItem("lingua-space-language-id") || "";
+    let noteMode = languages.some(language => language.id === selectedLanguageId) ? "saved" : "default";
 
     const sortedLanguages = [...languages].sort((a, b) =>
         a.name.localeCompare(b.name, "en", { sensitivity: "base" })
@@ -515,7 +519,7 @@
         const allTab = document.createElement("button");
         allTab.type = "button";
         allTab.className = "language-tab" + (activeLanguageId === "all" ? " active" : "");
-        allTab.textContent = "All languages";
+        allTab.textContent = LS.t("lp.allLanguages");
         allTab.setAttribute("role", "tab");
         allTab.setAttribute("aria-selected", String(activeLanguageId === "all"));
         allTab.addEventListener("click", () => {
@@ -567,7 +571,7 @@
 
             const name = document.createElement("span");
             name.className = "directory-name";
-            name.textContent = language.name + " · " + language.korean;
+            name.textContent = language.name;
 
             const native = document.createElement("span");
             native.className = "directory-native";
@@ -583,20 +587,33 @@
             card.addEventListener("click", () => {
                 selectedLanguageId = language.id;
                 localStorage.setItem("lingua-space-language-id", selectedLanguageId);
+                noteMode = "picked";
                 renderDirectory();
-                selectionNote.textContent =
-                    "현재 선택한 언어: " + language.name + " (" + language.korean + "). " +
-                    "언어 선택은 브라우저에 저장됩니다. 실제 학습 자료와 연결하는 기능은 다음 단계에서 추가할 수 있어요.";
+                renderNote();
             });
             languageDirectory.appendChild(card);
         });
 
         listHeading.textContent = activeLanguageId === "all"
-            ? "All languages · A–Z"
-            : (languages.find(language => language.id === activeLanguageId)?.name || "Languages");
+            ? LS.t("lp.allAZ")
+            : (languages.find(language => language.id === activeLanguageId)?.name || LS.t("lp.languages"));
 
-        languageCount.textContent = filtered.length + (filtered.length === 1 ? " language" : " languages");
+        languageCount.textContent = filtered.length === 1
+            ? LS.t("lp.count1")
+            : LS.t("lp.countN", { n: filtered.length });
         noResults.hidden = filtered.length > 0;
+    }
+
+    function renderNote() {
+        const language = languages.find(item => item.id === selectedLanguageId);
+        if (language && noteMode !== "default") {
+            selectionNote.textContent = LS.t(
+                noteMode === "picked" ? "lp.nowSelected" : "lp.lastSelected",
+                { name: language.name, native: language.native }
+            );
+        } else {
+            selectionNote.textContent = LS.t("lp.selectionDefault");
+        }
     }
 
     languageSearch.addEventListener("input", () => {
@@ -605,13 +622,15 @@
         renderDirectory();
     });
 
-    const savedLanguage = languages.find(language => language.id === selectedLanguageId);
-    if (savedLanguage) {
-        selectionNote.textContent = "마지막으로 선택한 언어: " + savedLanguage.name + " (" + savedLanguage.korean + ").";
-    }
+    LS.onChange(() => {
+        renderTabs();
+        renderDirectory();
+        renderNote();
+    });
 
     renderTabs();
     renderDirectory();
+    renderNote();
 
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
