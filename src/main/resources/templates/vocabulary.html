@@ -462,6 +462,11 @@
             @media (max-width: 760px) {
             input, select, textarea { font-size: 16px !important; }
         }
+        .text-button { display: inline-flex; align-items: center; gap: 6px; }
+        .text-button .icon, .primary-button .icon { width: 16px; height: 16px; flex-shrink: 0; }
+        .primary-button { display: inline-flex; align-items: center; gap: 8px; }
+        .nav-links a { display: inline-flex; align-items: center; gap: 6px; }
+        .nav-links .icon { width: 16px; height: 16px; }
     </style>
 </head>
 
@@ -472,11 +477,11 @@
     <a class="logo" href="/">Lingua <span>Space.</span></a>
 
     <nav class="nav-links">
-        <a href="/" data-i18n="nav.languageHome">Language Home</a>
-        <a href="/vocabulary" class="active" data-i18n="nav.vocab">My Vocabulary</a>
-        <a href="#" data-i18n="nav.reading">Reading &amp; Expression</a>
-        <a href="#" data-i18n="nav.archive">Learning Archive</a>
-        <a href="/" data-i18n="nav.language">Language</a>
+        <a href="/"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#home"/></svg><span data-i18n="nav.languageHome">Language Home</span></a>
+        <a href="/vocabulary" class="active"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#book"/></svg><span data-i18n="nav.vocab">My Vocabulary</span></a>
+        <a href="#"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#note"/></svg><span data-i18n="nav.reading">Reading &amp; Expression</span></a>
+        <a href="#"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#archive"/></svg><span data-i18n="nav.archive">Learning Archive</span></a>
+        <a href="/"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#globe"/></svg><span data-i18n="nav.language">Language</span></a>
     </nav>
     <div class="ls-picker-slot"><select class="ls-lang-picker" data-lang-picker data-i18n-aria="ui.picker" aria-label="Interface language"></select></div>
 </header>
@@ -556,8 +561,8 @@
             </div>
 
             <div class="form-actions">
-                <button type="button" class="primary-button" data-i18n="vocab.addBtn">
-                    + Add to my collection
+                <button type="button" class="primary-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#plus"/></svg><span data-i18n="vocab.addBtn">
+                    Add to my collection</span>
                 </button>
             </div>
         </form>
@@ -604,9 +609,9 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
-                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
-                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#circle"/></svg><span data-i18n="vocab.markLearned">Mark as learned</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#pencil"/></svg><span data-i18n="vocab.edit">Edit</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#trash"/></svg><span data-i18n="common.delete">Delete</span></button>
                 </div>
             </article>
 
@@ -630,9 +635,9 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
-                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
-                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#circle"/></svg><span data-i18n="vocab.markLearned">Mark as learned</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#pencil"/></svg><span data-i18n="vocab.edit">Edit</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#trash"/></svg><span data-i18n="common.delete">Delete</span></button>
                 </div>
             </article>
 
@@ -656,9 +661,9 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
-                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
-                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#circle"/></svg><span data-i18n="vocab.markLearned">Mark as learned</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#pencil"/></svg><span data-i18n="vocab.edit">Edit</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#trash"/></svg><span data-i18n="common.delete">Delete</span></button>
                 </div>
             </article>
 
@@ -682,9 +687,9 @@
                 </p>
 
                 <div class="card-actions">
-                    <button type="button" class="text-button" data-i18n="vocab.markLearned">○ Mark as learned</button>
-                    <button type="button" class="text-button" data-i18n="vocab.edit">Edit</button>
-                    <button type="button" class="text-button" data-i18n="common.delete">Delete</button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#circle"/></svg><span data-i18n="vocab.markLearned">Mark as learned</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#pencil"/></svg><span data-i18n="vocab.edit">Edit</span></button>
+                    <button type="button" class="text-button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#trash"/></svg><span data-i18n="common.delete">Delete</span></button>
                 </div>
             </article>
 
@@ -698,6 +703,20 @@
 </footer>
 
 <script>
+    // Learned toggle button: icon + label (labels come from the translation file)
+    function renderLearnedButton(button, learned) {
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("class", "icon");
+        svg.setAttribute("aria-hidden", "true");
+        const use = document.createElementNS(ns, "use");
+        use.setAttribute("href", "/icons/sprite.svg#" + (learned ? "check-circle" : "circle"));
+        svg.appendChild(use);
+        const label = document.createElement("span");
+        label.textContent = LS.t(learned ? "vocab.learned" : "vocab.markLearned");
+        button.replaceChildren(svg, label);
+    }
+
     // 단어 등록 폼과 단어 목록을 가져옵니다.
     const form = document.querySelector(".section-card form");
     const wordList = document.querySelector(".word-list");
@@ -806,14 +825,13 @@
             LS.t("vocab.markLearned")
         );
         learnedButton.type = "button";
+        renderLearnedButton(learnedButton, false);
 
         learnedButton.addEventListener("click", function () {
             const learned = learnedButton.dataset.learned === "true";
 
             learnedButton.dataset.learned = String(!learned);
-            learnedButton.textContent = learned
-                ? LS.t("vocab.markLearned")
-                : LS.t("vocab.learned");
+            renderLearnedButton(learnedButton, !learned);
 
             top.querySelector(".study-status").textContent = learned
                 ? LS.t("vocab.justAdded")

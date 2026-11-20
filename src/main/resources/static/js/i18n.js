@@ -24,7 +24,7 @@
 
         // Navigation
         "nav.home": {
-            en: "← Home", ja: "← ホーム", es: "← Inicio", ko: "← 홈", vi: "← Trang chủ", fr: "← Accueil", zh: "← 首页"
+            en: "Home", ja: "ホーム", es: "Inicio", ko: "홈", vi: "Trang chủ", fr: "Accueil", zh: "首页"
         },
         "nav.languageHome": {
             en: "Language Home", ja: "言語ホーム", es: "Inicio de idiomas", ko: "언어 홈",
@@ -321,19 +321,19 @@
             vi: "Tìm từ vựng", fr: "Rechercher dans le vocabulaire", zh: "搜索词汇"
         },
         "vocab.addBtn": {
-            en: "+ Add to my collection", ja: "+ 単語帳に追加", es: "+ Añadir a mi colección", ko: "+ 내 단어장에 추가",
-            vi: "+ Thêm vào bộ sưu tập", fr: "+ Ajouter à ma collection", zh: "+ 加入我的收藏"
+            en: "Add to my collection", ja: "単語帳に追加", es: "Añadir a mi colección", ko: "내 단어장에 추가",
+            vi: "Thêm vào bộ sưu tập", fr: "Ajouter à ma collection", zh: "加入我的收藏"
         },
         "vocab.collection": {
             en: "Your collection", ja: "あなたのコレクション", es: "Tu colección", ko: "나의 단어 모음",
             vi: "Bộ sưu tập của bạn", fr: "Votre collection", zh: "你的收藏"
         },
         "vocab.markLearned": {
-            en: "○ Mark as learned", ja: "○ 習得済みにする", es: "○ Marcar como aprendida", ko: "○ 익힘으로 표시",
-            vi: "○ Đánh dấu đã học", fr: "○ Marquer comme apprise", zh: "○ 标记为已学会"
+            en: "Mark as learned", ja: "習得済みにする", es: "Marcar como aprendida", ko: "익힘으로 표시",
+            vi: "Đánh dấu đã học", fr: "Marquer comme apprise", zh: "标记为已学会"
         },
         "vocab.learned": {
-            en: "✓ Learned", ja: "✓ 習得済み", es: "✓ Aprendida", ko: "✓ 익힘", vi: "✓ Đã học", fr: "✓ Apprise", zh: "✓ 已学会"
+            en: "Learned", ja: "習得済み", es: "Aprendida", ko: "익힘", vi: "Đã học", fr: "Apprise", zh: "已学会"
         },
         "vocab.statusLearned": {
             en: "Learned", ja: "習得済み", es: "Aprendida", ko: "익힘", vi: "Đã học", fr: "Apprise", zh: "已学会"
@@ -579,6 +579,10 @@
         "kr.archiveTitle": {
             en: "My discovery archive", ja: "私の発見アーカイブ", es: "Mi archivo de descubrimientos", ko: "나의 발견 아카이브",
             vi: "Kho khám phá của tôi", fr: "Mon archive de découvertes", zh: "我的发现档案"
+        },
+        "kr.loading": {
+            en: "Loading your archive…", ja: "アーカイブを読み込み中…", es: "Cargando tu archivo…", ko: "기록을 불러오는 중…",
+            vi: "Đang tải kho của bạn…", fr: "Chargement de votre archive…", zh: "正在加载你的档案…"
         },
         "kr.emptyCount": {
             en: "No records saved yet.", ja: "まだ保存された記録はありません。", es: "Todavía no hay registros guardados.",

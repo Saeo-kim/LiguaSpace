@@ -222,6 +222,12 @@
         }
 
         .btn.danger { color: var(--danger); }
+        .btn { display: inline-flex; align-items: center; gap: 6px; }
+        .icon { width: 18px; height: 18px; flex-shrink: 0; }
+        .btn.small .icon { width: 15px; height: 15px; }
+        .tab { display: inline-flex; align-items: center; gap: 7px; }
+        .tab .icon { width: 16px; height: 16px; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; }
         .btn.small { padding: 6px 10px; min-height: 34px; font-size: 13px; }
         .btn:disabled { opacity: .5; cursor: default; }
 
@@ -396,7 +402,7 @@
 <body>
 
 <header class="topbar">
-    <a class="back-link" href="/#languages">← Language</a>
+    <a class="back-link" href="/#languages"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#arrow-left"/></svg><span>Language</span></a>
     <div class="brand">Lingua <span>Space.</span> · English</div>
 </header>
 
@@ -415,10 +421,10 @@
     </section>
 
     <nav class="tabs" role="tablist" aria-label="English study sections">
-        <button class="tab" role="tab" type="button" data-tab="vocab" aria-selected="true">Vocabulary</button>
-        <button class="tab" role="tab" type="button" data-tab="memo" aria-selected="false">Quick Memo</button>
-        <button class="tab" role="tab" type="button" data-tab="practice" aria-selected="false">Study &amp; Practice</button>
-        <button class="tab" role="tab" type="button" data-tab="explore" aria-selected="false">Explore</button>
+        <button class="tab" role="tab" type="button" data-tab="vocab" aria-selected="true"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#book"/></svg><span>Vocabulary</span></button>
+        <button class="tab" role="tab" type="button" data-tab="memo" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#note"/></svg><span>Quick Memo</span></button>
+        <button class="tab" role="tab" type="button" data-tab="practice" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#practice"/></svg><span>Study &amp; Practice</span></button>
+        <button class="tab" role="tab" type="button" data-tab="explore" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#compass"/></svg><span>Explore</span></button>
     </nav>
 
     <!-- ============ VOCABULARY ============ -->
@@ -481,7 +487,7 @@
                         <option value="">All categories</option>
                     </select>
                 </div>
-                <div class="items" id="wordList"></div>
+                <div class="items" id="wordList"><div class="empty">Loading your words…</div></div>
             </div>
         </div>
     </section>
@@ -513,7 +519,7 @@
                 <div class="toolbar">
                     <input type="search" id="memoSearch" placeholder="Search memos" aria-label="Search memos">
                 </div>
-                <div class="items" id="memoList"></div>
+                <div class="items" id="memoList"><div class="empty">Loading your memos…</div></div>
             </div>
         </div>
     </section>
@@ -603,7 +609,7 @@
                     <input type="search" id="exprSearch" placeholder="Search expressions" aria-label="Search expressions">
                 </div>
                 <div class="chips-row" id="tagFilters" role="group" aria-label="Filter by tag"></div>
-                <div class="items" id="exprList"></div>
+                <div class="items" id="exprList"><div class="empty">Loading expressions…</div></div>
             </div>
         </div>
     </section>
@@ -612,6 +618,7 @@
 
 <div class="notice" id="notice" role="status" hidden></div>
 
+<script src="/js/net.js"></script>
 <script>
     const API = "/api/english";
 
@@ -639,6 +646,25 @@
         return node;
     }
 
+    // Icon used inside buttons (static icon set from /icons/sprite.svg)
+    function iconEl(name) {
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("class", "icon");
+        svg.setAttribute("aria-hidden", "true");
+        const use = document.createElementNS(ns, "use");
+        use.setAttribute("href", "/icons/sprite.svg#" + name);
+        svg.appendChild(use);
+        return svg;
+    }
+
+    function btn(text, icon, className) {
+        const button = el("button", className);
+        button.type = "button";
+        button.append(iconEl(icon), el("span", "", text));
+        return button;
+    }
+
     function showNotice(message) {
         const box = $("notice");
         box.textContent = message;
@@ -656,7 +682,7 @@
 
     async function api(path, options = {}) {
         const init = { ...options, headers: { "Content-Type": "application/json" } };
-        const response = await fetch(API + path, init);
+        const response = await LSNet.track(fetch(API + path, init));
 
         if (!response.ok) {
             const messages = {
@@ -688,6 +714,26 @@
         state.memos = memos;
         state.expressions = expressions;
         renderAll();
+    }
+
+    // After a change, reload only the list that changed
+    async function reloadWords() {
+        state.words = await api("/words");
+        renderCounts();
+        renderWords();
+        renderPractice();
+    }
+
+    async function reloadMemos() {
+        state.memos = await api("/memos");
+        renderCounts();
+        renderMemos();
+    }
+
+    async function reloadExpressions() {
+        state.expressions = await api("/expressions");
+        renderCounts();
+        renderExpressions();
     }
 
     function renderAll() {
@@ -810,25 +856,25 @@
         }
 
         const actions = el("div", "item-actions");
-        const toggle = el("button", "btn small", w.learned ? "Mark as learning" : "Mark as learned");
+        const toggle = btn(w.learned ? "Mark as learning" : "Mark as learned", w.learned ? "circle" : "check-circle", "btn small");
         toggle.type = "button";
         toggle.addEventListener("click", () => run(async () => {
             await api("/words/" + w.id, {
                 method: "PUT",
                 body: JSON.stringify({ ...wordFields(w), learned: !w.learned })
             });
-            await loadAll();
+            await reloadWords();
         }));
-        const edit = el("button", "btn small", "Edit");
+        const edit = btn("Edit", "pencil", "btn small");
         edit.type = "button";
         edit.addEventListener("click", () => startEditWord(w));
-        const del = el("button", "btn small danger", "Delete");
+        const del = btn("Delete", "trash", "btn small danger");
         del.type = "button";
         del.addEventListener("click", () => {
             if (!confirm(`Delete "${w.word}"?`)) return;
             run(async () => {
                 await api("/words/" + w.id, { method: "DELETE" });
-                await loadAll();
+                await reloadWords();
                 showNotice("Word deleted.");
             });
         });
@@ -882,7 +928,7 @@
                 showNotice("Word saved.");
             }
             resetWordForm();
-            await loadAll();
+            await reloadWords();
         });
     });
 
@@ -928,7 +974,7 @@
             item.appendChild(body);
 
             const actions = el("div", "item-actions");
-            const edit = el("button", "btn small", "Edit");
+            const edit = btn("Edit", "pencil", "btn small");
             edit.type = "button";
             edit.addEventListener("click", () => {
                 $("memoId").value = m.id;
@@ -940,13 +986,13 @@
                 $("memoForm").scrollIntoView({ behavior: "smooth", block: "start" });
                 $("memoBody").focus();
             });
-            const del = el("button", "btn small danger", "Delete");
+            const del = btn("Delete", "trash", "btn small danger");
             del.type = "button";
             del.addEventListener("click", () => {
                 if (!confirm("Delete this memo?")) return;
                 run(async () => {
                     await api("/memos/" + m.id, { method: "DELETE" });
-                    await loadAll();
+                    await reloadMemos();
                     showNotice("Memo deleted.");
                 });
             });
@@ -973,7 +1019,7 @@
                 showNotice("Memo saved.");
             }
             resetMemoForm();
-            await loadAll();
+            await reloadMemos();
         });
     });
 
@@ -1040,7 +1086,7 @@
             if (x.example) item.appendChild(el("p", "item-example", x.example));
 
             const actions = el("div", "item-actions");
-            const edit = el("button", "btn small", "Edit");
+            const edit = btn("Edit", "pencil", "btn small");
             edit.type = "button";
             edit.addEventListener("click", () => {
                 $("exprId").value = x.id;
@@ -1054,13 +1100,13 @@
                 $("exprForm").scrollIntoView({ behavior: "smooth", block: "start" });
                 $("exprInput").focus();
             });
-            const del = el("button", "btn small danger", "Delete");
+            const del = btn("Delete", "trash", "btn small danger");
             del.type = "button";
             del.addEventListener("click", () => {
                 if (!confirm(`Delete "${x.expression}"?`)) return;
                 run(async () => {
                     await api("/expressions/" + x.id, { method: "DELETE" });
-                    await loadAll();
+                    await reloadExpressions();
                     showNotice("Expression deleted.");
                 });
             });
@@ -1092,7 +1138,7 @@
                 showNotice("Expression saved.");
             }
             resetExprForm();
-            await loadAll();
+            await reloadExpressions();
         });
     });
 
@@ -1180,7 +1226,7 @@
                 method: "PUT",
                 body: JSON.stringify({ ...wordFields(w), learned: true })
             });
-            await loadAll();
+            await reloadWords();
             state.flashRevealed = false;
             showNotice(`"${w.word}" marked as learned.`);
         });
