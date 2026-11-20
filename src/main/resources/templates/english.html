@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Study Box | Lingua Space</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/lingua-space-icon-192.png">
+
+    <style>
+        :root {
+            --bg: #F8F8F3;
+            --surface: #FFFFFF;
+            --sage: #72866D;
+            --sage-dark: #4F6149;
+            --sage-light: #E8EDE4;
+            --text: #30372F;
+            --muted: #7E8479;
+            --border: #E3E5DC;
+            --danger: #A65A4B;
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, "Malgun Gothic", sans-serif;
+            line-height: 1.55;
+            font-size: 15px;
+            overflow-x: hidden;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+            color: inherit;
+        }
+
+        /* 16px inputs stop iOS Safari from zooming in when a field is tapped */
+        input, select, textarea { font-size: 16px; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 18px;
+            background: rgba(248, 248, 243, 0.96);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-link {
+            color: var(--sage-dark);
+            text-decoration: none;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 15px;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand span { color: var(--sage); }
+
+        .wrap {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 22px 16px 80px;
+        }
+
+        .intro { margin-bottom: 18px; }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--sage);
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 6px 0 6px;
+            font-size: 28px;
+            line-height: 1.2;
+        }
+
+        .intro p { margin: 0; color: var(--muted); font-size: 14px; }
+
+        .counts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .count-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .count-pill strong { color: var(--text); }
+
+        /* Section tabs: horizontal scroll on phones, full row on desktop */
+        .tabs {
+            position: sticky;
+            top: 57px;
+            z-index: 10;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 0 -16px 16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            background: var(--bg);
+            scrollbar-width: none;
+        }
+
+        .tabs::-webkit-scrollbar { display: none; }
+
+        .tab {
+            flex: 0 0 auto;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 999px;
+            padding: 9px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            min-height: 40px;
+        }
+
+        .tab[aria-selected="true"] {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .panel[hidden] { display: none; }
+
+        .layout-two {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+        }
+
+        .card h2 {
+            margin: 0 0 4px;
+            font-size: 18px;
+        }
+
+        .card .hint {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+        .field label { font-size: 13px; font-weight: 700; color: var(--sage-dark); }
+
+        .field input, .field select, .field textarea, .toolbar input, .toolbar select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #FFFFFF;
+            padding: 10px 12px;
+            min-height: 44px;
+        }
+
+        .field textarea { min-height: 88px; resize: vertical; }
+
+        .field input:focus, .field select:focus, .field textarea:focus,
+        .toolbar input:focus, .toolbar select:focus {
+            outline: 2px solid var(--sage-light);
+            border-color: var(--sage);
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 0 14px; }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+
+        .btn {
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 10px;
+            padding: 10px 14px;
+            min-height: 42px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn.primary {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .btn.danger { color: var(--danger); }
+        .btn { display: inline-flex; align-items: center; gap: 6px; }
+        .icon { width: 18px; height: 18px; flex-shrink: 0; }
+        .btn.small .icon { width: 15px; height: 15px; }
+        .tab { display: inline-flex; align-items: center; gap: 7px; }
+        .tab .icon { width: 16px; height: 16px; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; }
+        .btn.small { padding: 6px 10px; min-height: 34px; font-size: 13px; }
+        .btn:disabled { opacity: .5; cursor: default; }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .items { display: flex; flex-direction: column; gap: 10px; }
+
+        .item {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            background: #FFFFFF;
+        }
+
+        .item-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .item-word {
+            margin: 0;
+            font-size: 18px;
+            word-break: break-word;
+        }
+
+        .item-sub { color: var(--muted); font-size: 13px; }
+        .item-meaning { margin: 8px 0 0; font-size: 14px; }
+        .item-example { margin: 8px 0 0; font-size: 14px; color: #4a5246; }
+        .item-example span { display: block; color: var(--muted); font-size: 13px; }
+        .item-note { margin: 8px 0 0; font-size: 13px; color: var(--muted); white-space: pre-wrap; }
+        .memo-body { margin: 8px 0 0; font-size: 14px; white-space: pre-wrap; word-break: break-word; }
+
+        .chip {
+            display: inline-block;
+            background: var(--sage-light);
+            color: var(--sage-dark);
+            border-radius: 999px;
+            padding: 2px 10px;
+            font-size: 12px;
+            margin-right: 6px;
+        }
+
+        .chip.done { background: #DDEBD4; }
+
+        .item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 26px 10px;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .notice {
+            position: fixed;
+            left: 16px;
+            right: 16px;
+            bottom: 16px;
+            max-width: 560px;
+            margin: 0 auto;
+            background: #3C4539;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 50;
+        }
+
+        .notice[hidden] { display: none; }
+
+        .chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .filter-chip {
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .filter-chip[aria-pressed="true"] {
+            background: var(--sage-light);
+            border-color: var(--sage);
+            color: var(--sage-dark);
+            font-weight: 700;
+        }
+
+        /* Practice */
+        .mode-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+
+        .flashcard {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: linear-gradient(180deg, #FFFFFF, #F3F6EF);
+            padding: 26px 18px;
+            text-align: center;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .flashcard .fc-word { font-size: 30px; font-weight: 700; word-break: break-word; margin: 0; }
+        .flashcard .fc-pron { color: var(--muted); font-size: 14px; }
+        .flashcard .fc-back { display: none; margin-top: 8px; }
+        .fc-example { white-space: pre-line; }
+        .flashcard.revealed .fc-back { display: block; }
+        .fc-back .fc-meaning { font-size: 18px; margin: 0 0 6px; }
+        .fc-back .fc-example { font-size: 14px; color: #4a5246; margin: 0; }
+
+        .practice-status { color: var(--muted); font-size: 13px; text-align: center; margin: 10px 0 0; }
+
+        .spell-question {
+            font-size: 17px;
+            margin: 0 0 10px;
+            line-height: 1.5;
+        }
+
+        .spell-result {
+            margin: 10px 0 0;
+            font-size: 14px;
+            min-height: 22px;
+        }
+
+        .spell-result.ok { color: var(--sage-dark); font-weight: 700; }
+        .spell-result.bad { color: var(--danger); }
+
+        /* Tablet and up */
+        @media (min-width: 700px) {
+            .wrap { padding: 26px 24px 90px; }
+            h1 { font-size: 34px; }
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .form-grid .full { grid-column: 1 / -1; }
+            .toolbar { grid-template-columns: 1fr 1fr; }
+            .toolbar > input[type="search"] { grid-column: 1 / -1; }
+        }
+
+        /* Desktop: two columns for form and list */
+        @media (min-width: 960px) {
+            .layout-two { grid-template-columns: minmax(320px, 1fr) minmax(0, 1.25fr); }
+            .layout-two.single { grid-template-columns: 1fr; }
+            .form-card { position: sticky; top: 130px; }
+        }
+
+        @media (max-width: 360px) {
+            h1 { font-size: 24px; }
+            .tab { padding: 8px 12px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <a class="back-link" href="/#languages"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#arrow-left"/></svg><span>Language</span></a>
+    <div class="brand">Lingua <span>Space.</span> · English</div>
+</header>
+
+<main class="wrap">
+
+    <section class="intro">
+        <div class="eyebrow">Your English space</div>
+        <h1>English Study Box</h1>
+        <p>Save words, write quick memos, practice, and collect expressions in one place.</p>
+        <div class="counts" aria-live="polite">
+            <span class="count-pill"><strong id="countWords">0</strong> words</span>
+            <span class="count-pill"><strong id="countLearned">0</strong> learned</span>
+            <span class="count-pill"><strong id="countMemos">0</strong> memos</span>
+            <span class="count-pill"><strong id="countExpressions">0</strong> expressions</span>
+        </div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="English study sections">
+        <button class="tab" role="tab" type="button" data-tab="vocab" aria-selected="true"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#book"/></svg><span>Vocabulary</span></button>
+        <button class="tab" role="tab" type="button" data-tab="memo" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#note"/></svg><span>Quick Memo</span></button>
+        <button class="tab" role="tab" type="button" data-tab="practice" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#practice"/></svg><span>Study &amp; Practice</span></button>
+        <button class="tab" role="tab" type="button" data-tab="explore" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#compass"/></svg><span>Explore</span></button>
+    </nav>
+
+    <!-- ============ VOCABULARY ============ -->
+    <section class="panel" id="panel-vocab" role="tabpanel">
+        <div class="layout-two">
+            <form class="card form-card" id="wordForm" autocomplete="off" novalidate>
+                <h2 id="wordFormTitle">Add a word</h2>
+                <p class="hint">Only the word and its meaning are required.</p>
+                <input type="hidden" id="wordId">
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="wordInput">Word or phrase *</label>
+                        <input id="wordInput" maxlength="120" placeholder="e.g. take a break">
+                    </div>
+                    <div class="field">
+                        <label for="wordPron">Pronunciation</label>
+                        <input id="wordPron" maxlength="120" placeholder="e.g. teyk uh breyk">
+                    </div>
+                    <div class="field full">
+                        <label for="wordMeaning">Meaning (in Korean or English) *</label>
+                        <input id="wordMeaning" maxlength="300" placeholder="e.g. 잠깐 쉬다">
+                    </div>
+                    <div class="field">
+                        <label for="wordCategoryInput">Category</label>
+                        <input id="wordCategoryInput" maxlength="40" list="categoryList" placeholder="e.g. Travel">
+                        <datalist id="categoryList"></datalist>
+                    </div>
+                    <div class="field">
+                        <label for="wordExample">Example sentence</label>
+                        <input id="wordExample" maxlength="500" placeholder="e.g. Let's take a break.">
+                    </div>
+                    <div class="field full">
+                        <label for="wordExampleTr">Example translation</label>
+                        <input id="wordExampleTr" maxlength="500" placeholder="e.g. 잠깐 쉬자.">
+                    </div>
+                    <div class="field full">
+                        <label for="wordNote">Personal note</label>
+                        <textarea id="wordNote" maxlength="1000" placeholder="Where did you see it? When would you use it?"></textarea>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary" type="submit" id="wordSubmit">Save word</button>
+                    <button class="btn" type="button" id="wordCancel" hidden>Cancel edit</button>
+                </div>
+            </form>
+
+            <div class="card">
+                <h2>Your words</h2>
+                <p class="hint" id="wordCount">Loading…</p>
+                <div class="toolbar">
+                    <input type="search" id="wordSearch" placeholder="Search words, meanings, examples" aria-label="Search words">
+                    <select id="wordStatus" aria-label="Filter by status">
+                        <option value="">All status</option>
+                        <option value="unlearned">Not learned</option>
+                        <option value="learned">Learned</option>
+                    </select>
+                    <select id="wordCategoryFilter" aria-label="Filter by category">
+                        <option value="">All categories</option>
+                    </select>
+                </div>
+                <div class="items" id="wordList"><div class="empty">Loading your words…</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ QUICK MEMO ============ -->
+    <section class="panel" id="panel-memo" role="tabpanel" hidden>
+        <div class="layout-two">
+            <form class="card form-card" id="memoForm" autocomplete="off" novalidate>
+                <h2 id="memoFormTitle">New memo</h2>
+                <p class="hint">Type it as fast as you think. A title is optional.</p>
+                <input type="hidden" id="memoId">
+                <div class="field">
+                    <label for="memoTitle">Title (optional)</label>
+                    <input id="memoTitle" maxlength="120" placeholder="e.g. Grammar question">
+                </div>
+                <div class="field">
+                    <label for="memoBody">Memo *</label>
+                    <textarea id="memoBody" maxlength="5000" rows="8" placeholder="Write your thought here…"></textarea>
+                </div>
+                <div class="actions">
+                    <button class="btn primary" type="submit" id="memoSubmit">Save memo</button>
+                    <button class="btn" type="button" id="memoCancel" hidden>Cancel edit</button>
+                </div>
+            </form>
+
+            <div class="card">
+                <h2>Saved memos</h2>
+                <p class="hint" id="memoCount">Loading…</p>
+                <div class="toolbar">
+                    <input type="search" id="memoSearch" placeholder="Search memos" aria-label="Search memos">
+                </div>
+                <div class="items" id="memoList"><div class="empty">Loading your memos…</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ STUDY & PRACTICE ============ -->
+    <section class="panel" id="panel-practice" role="tabpanel" hidden>
+        <div class="layout-two single">
+            <div class="card">
+                <h2>Study &amp; Practice</h2>
+                <p class="hint" id="practicePool">Practice uses the words you have not learned yet.</p>
+
+                <div class="mode-row" role="group" aria-label="Practice mode">
+                    <button class="filter-chip" type="button" data-mode="flash" aria-pressed="true">Flashcards</button>
+                    <button class="filter-chip" type="button" data-mode="spell" aria-pressed="false">Spelling</button>
+                </div>
+
+                <!-- Flashcards -->
+                <div id="practiceFlash">
+                    <div class="flashcard" id="flashCard" role="button" tabindex="0" aria-label="Show meaning">
+                        <p class="fc-word" id="fcWord">Add words to start practicing</p>
+                        <p class="fc-pron" id="fcPron"></p>
+                        <div class="fc-back">
+                            <p class="fc-meaning" id="fcMeaning"></p>
+                            <p class="fc-example" id="fcExample"></p>
+                        </div>
+                    </div>
+                    <p class="practice-status" id="fcStatus">Tap the card to see the meaning.</p>
+                    <div class="actions" style="justify-content:center; margin-top:14px;">
+                        <button class="btn" type="button" id="fcStill">Still learning</button>
+                        <button class="btn primary" type="button" id="fcGot">Got it</button>
+                        <button class="btn" type="button" id="fcSkip">Next</button>
+                    </div>
+                </div>
+
+                <!-- Spelling -->
+                <div id="practiceSpell" hidden>
+                    <p class="spell-question" id="spellQuestion">Add words to start practicing.</p>
+                    <div class="field">
+                        <label for="spellInput">Type the English word</label>
+                        <input id="spellInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type here">
+                    </div>
+                    <div class="actions">
+                        <button class="btn primary" type="button" id="spellCheck">Check</button>
+                        <button class="btn" type="button" id="spellNext">Next word</button>
+                    </div>
+                    <p class="spell-result" id="spellResult" aria-live="polite"></p>
+                    <p class="practice-status" id="spellScore">Score: 0 / 0</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ EXPLORE ============ -->
+    <section class="panel" id="panel-explore" role="tabpanel" hidden>
+        <div class="layout-two">
+            <form class="card form-card" id="exprForm" autocomplete="off" novalidate>
+                <h2 id="exprFormTitle">Add an expression</h2>
+                <p class="hint">Phrases, idioms, and sentences you want to remember.</p>
+                <input type="hidden" id="exprId">
+                <div class="field">
+                    <label for="exprInput">Expression *</label>
+                    <input id="exprInput" maxlength="200" placeholder="e.g. break the ice">
+                </div>
+                <div class="field">
+                    <label for="exprMeaning">Meaning</label>
+                    <input id="exprMeaning" maxlength="300" placeholder="e.g. 어색한 분위기를 풀다">
+                </div>
+                <div class="field">
+                    <label for="exprExample">Example</label>
+                    <textarea id="exprExample" maxlength="500" placeholder="e.g. A joke helped break the ice."></textarea>
+                </div>
+                <div class="field">
+                    <label for="exprTag">Tag</label>
+                    <input id="exprTag" maxlength="40" list="tagList" placeholder="e.g. Idioms">
+                    <datalist id="tagList"></datalist>
+                </div>
+                <div class="actions">
+                    <button class="btn primary" type="submit" id="exprSubmit">Save expression</button>
+                    <button class="btn" type="button" id="exprCancel" hidden>Cancel edit</button>
+                </div>
+            </form>
+
+            <div class="card">
+                <h2>Expressions</h2>
+                <p class="hint" id="exprCount">Loading…</p>
+                <div class="toolbar">
+                    <input type="search" id="exprSearch" placeholder="Search expressions" aria-label="Search expressions">
+                </div>
+                <div class="chips-row" id="tagFilters" role="group" aria-label="Filter by tag"></div>
+                <div class="items" id="exprList"><div class="empty">Loading expressions…</div></div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div class="notice" id="notice" role="status" hidden></div>
+
+<script src="/js/net.js"></script>
+<script>
+    const API = "/api/english";
+
+    const state = {
+        words: [],
+        memos: [],
+        expressions: [],
+        wordFilterCategory: "",
+        exprFilterTag: "",
+        practiceMode: "flash",
+        flashIndex: 0,
+        flashRevealed: false,
+        spellWord: null,
+        spellScore: { correct: 0, total: 0 }
+    };
+
+    const $ = id => document.getElementById(id);
+
+    // ---------- helpers ----------
+
+    function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined && text !== null) node.textContent = text;
+        return node;
+    }
+
+    // Icon used inside buttons (static icon set from /icons/sprite.svg)
+    function iconEl(name) {
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("class", "icon");
+        svg.setAttribute("aria-hidden", "true");
+        const use = document.createElementNS(ns, "use");
+        use.setAttribute("href", "/icons/sprite.svg#" + name);
+        svg.appendChild(use);
+        return svg;
+    }
+
+    function btn(text, icon, className) {
+        const button = el("button", className);
+        button.type = "button";
+        button.append(iconEl(icon), el("span", "", text));
+        return button;
+    }
+
+    function showNotice(message) {
+        const box = $("notice");
+        box.textContent = message;
+        box.hidden = false;
+        clearTimeout(showNotice.timer);
+        showNotice.timer = setTimeout(() => { box.hidden = true; }, 2600);
+    }
+
+    function formatDate(value) {
+        if (!value) return "";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    async function api(path, options = {}) {
+        const init = { ...options, headers: { "Content-Type": "application/json" } };
+        const response = await LSNet.track(fetch(API + path, init));
+
+        if (!response.ok) {
+            const messages = {
+                400: "Please fill in the required fields.",
+                404: "That item no longer exists. Refresh the page and try again."
+            };
+            throw new Error(messages[response.status] || `Something went wrong (${response.status}).`);
+        }
+        if (response.status === 204) return null;
+        return response.json();
+    }
+
+    async function run(action) {
+        try {
+            await action();
+        } catch (error) {
+            console.error(error);
+            showNotice(error.message || "Something went wrong.");
+        }
+    }
+
+    // ---------- loading ----------
+
+    async function loadAll() {
+        const [words, memos, expressions] = await Promise.all([
+            api("/words"), api("/memos"), api("/expressions")
+        ]);
+        state.words = words;
+        state.memos = memos;
+        state.expressions = expressions;
+        renderAll();
+    }
+
+    // After a change, reload only the list that changed
+    async function reloadWords() {
+        state.words = await api("/words");
+        renderCounts();
+        renderWords();
+        renderPractice();
+    }
+
+    async function reloadMemos() {
+        state.memos = await api("/memos");
+        renderCounts();
+        renderMemos();
+    }
+
+    async function reloadExpressions() {
+        state.expressions = await api("/expressions");
+        renderCounts();
+        renderExpressions();
+    }
+
+    function renderAll() {
+        renderCounts();
+        renderWords();
+        renderMemos();
+        renderExpressions();
+        renderPractice();
+    }
+
+    function renderCounts() {
+        $("countWords").textContent = state.words.length;
+        $("countLearned").textContent = state.words.filter(w => w.learned).length;
+        $("countMemos").textContent = state.memos.length;
+        $("countExpressions").textContent = state.expressions.length;
+    }
+
+    // ---------- tabs ----------
+
+    function showTab(name) {
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.setAttribute("aria-selected", String(tab.dataset.tab === name));
+        });
+        document.querySelectorAll(".panel").forEach(panel => {
+            panel.hidden = panel.id !== "panel-" + name;
+        });
+        history.replaceState(null, "", "#" + name);
+    }
+
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => showTab(tab.dataset.tab));
+    });
+
+    // ---------- Vocabulary ----------
+
+    function resetWordForm() {
+        $("wordForm").reset();
+        $("wordId").value = "";
+        $("wordFormTitle").textContent = "Add a word";
+        $("wordSubmit").textContent = "Save word";
+        $("wordCancel").hidden = true;
+    }
+
+    function wordBody() {
+        return {
+            word: $("wordInput").value,
+            pronunciation: $("wordPron").value,
+            meaning: $("wordMeaning").value,
+            category: $("wordCategoryInput").value,
+            example: $("wordExample").value,
+            exampleTranslation: $("wordExampleTr").value,
+            note: $("wordNote").value
+        };
+    }
+
+    function renderWords() {
+        const query = $("wordSearch").value.trim().toLowerCase();
+        const status = $("wordStatus").value;
+        const category = state.wordFilterCategory;
+
+        // category lists
+        const categories = [...new Set(state.words.map(w => w.category).filter(Boolean))].sort();
+        const catSelect = $("wordCategoryFilter");
+        const catDatalist = $("categoryList");
+        const currentCat = category;
+        catSelect.replaceChildren(new Option("All categories", ""));
+        catDatalist.replaceChildren();
+        categories.forEach(c => {
+            catSelect.appendChild(new Option(c, c));
+            catDatalist.appendChild(new Option(c, c));
+        });
+        catSelect.value = categories.includes(currentCat) ? currentCat : "";
+        state.wordFilterCategory = catSelect.value;
+
+        const filtered = state.words.filter(w => {
+            if (status === "learned" && !w.learned) return false;
+            if (status === "unlearned" && w.learned) return false;
+            if (state.wordFilterCategory && w.category !== state.wordFilterCategory) return false;
+            if (!query) return true;
+            return [w.word, w.pronunciation, w.meaning, w.example, w.exampleTranslation, w.note, w.category]
+                .filter(Boolean).join(" ").toLowerCase().includes(query);
+        });
+
+        $("wordCount").textContent = `${filtered.length} of ${state.words.length} shown`;
+
+        const list = $("wordList");
+        list.replaceChildren();
+        if (filtered.length === 0) {
+            list.appendChild(el("div", "empty", state.words.length === 0
+                ? "No words yet. Add your first word above."
+                : "No words match these filters."));
+            return;
+        }
+
+        filtered.forEach(w => list.appendChild(wordCard(w)));
+    }
+
+    function wordCard(w) {
+        const item = el("article", "item");
+        const head = el("div", "item-head");
+        const titleBox = el("div");
+        titleBox.appendChild(el("h3", "item-word", w.word));
+        if (w.pronunciation) titleBox.appendChild(el("div", "item-sub", w.pronunciation));
+        head.appendChild(titleBox);
+        head.appendChild(el("span", "chip" + (w.learned ? " done" : ""), w.learned ? "Learned" : "Learning"));
+        item.appendChild(head);
+
+        item.appendChild(el("p", "item-meaning", w.meaning));
+        if (w.example) {
+            const ex = el("p", "item-example", w.example);
+            if (w.exampleTranslation) ex.appendChild(el("span", "", w.exampleTranslation));
+            item.appendChild(ex);
+        }
+        if (w.note) item.appendChild(el("p", "item-note", w.note));
+        if (w.category) {
+            const meta = el("div", "item-sub");
+            meta.style.marginTop = "8px";
+            meta.appendChild(el("span", "chip", w.category));
+            item.appendChild(meta);
+        }
+
+        const actions = el("div", "item-actions");
+        const toggle = btn(w.learned ? "Mark as learning" : "Mark as learned", w.learned ? "circle" : "check-circle", "btn small");
+        toggle.type = "button";
+        toggle.addEventListener("click", () => run(async () => {
+            await api("/words/" + w.id, {
+                method: "PUT",
+                body: JSON.stringify({ ...wordFields(w), learned: !w.learned })
+            });
+            await reloadWords();
+        }));
+        const edit = btn("Edit", "pencil", "btn small");
+        edit.type = "button";
+        edit.addEventListener("click", () => startEditWord(w));
+        const del = btn("Delete", "trash", "btn small danger");
+        del.type = "button";
+        del.addEventListener("click", () => {
+            if (!confirm(`Delete "${w.word}"?`)) return;
+            run(async () => {
+                await api("/words/" + w.id, { method: "DELETE" });
+                await reloadWords();
+                showNotice("Word deleted.");
+            });
+        });
+        actions.append(toggle, edit, del);
+        item.appendChild(actions);
+        return item;
+    }
+
+    function wordFields(w) {
+        return {
+            word: w.word, pronunciation: w.pronunciation, meaning: w.meaning,
+            example: w.example, exampleTranslation: w.exampleTranslation,
+            note: w.note, category: w.category
+        };
+    }
+
+    function startEditWord(w) {
+        $("wordId").value = w.id;
+        $("wordInput").value = w.word || "";
+        $("wordPron").value = w.pronunciation || "";
+        $("wordMeaning").value = w.meaning || "";
+        $("wordCategoryInput").value = w.category || "";
+        $("wordExample").value = w.example || "";
+        $("wordExampleTr").value = w.exampleTranslation || "";
+        $("wordNote").value = w.note || "";
+        $("wordFormTitle").textContent = "Edit word";
+        $("wordSubmit").textContent = "Update word";
+        $("wordCancel").hidden = false;
+        $("wordForm").scrollIntoView({ behavior: "smooth", block: "start" });
+        $("wordInput").focus();
+    }
+
+    $("wordForm").addEventListener("submit", event => {
+        event.preventDefault();
+        const body = wordBody();
+        if (!body.word.trim() || !body.meaning.trim()) {
+            showNotice("Please enter the word and its meaning.");
+            return;
+        }
+        const id = $("wordId").value;
+        run(async () => {
+            if (id) {
+                const existing = state.words.find(w => String(w.id) === id);
+                await api("/words/" + id, {
+                    method: "PUT",
+                    body: JSON.stringify({ ...body, learned: existing ? existing.learned : false })
+                });
+                showNotice("Word updated.");
+            } else {
+                await api("/words", { method: "POST", body: JSON.stringify(body) });
+                showNotice("Word saved.");
+            }
+            resetWordForm();
+            await reloadWords();
+        });
+    });
+
+    $("wordCancel").addEventListener("click", resetWordForm);
+    $("wordSearch").addEventListener("input", renderWords);
+    $("wordStatus").addEventListener("change", renderWords);
+    $("wordCategoryFilter").addEventListener("change", () => {
+        state.wordFilterCategory = $("wordCategoryFilter").value;
+        renderWords();
+    });
+
+    // ---------- Quick memo ----------
+
+    function resetMemoForm() {
+        $("memoForm").reset();
+        $("memoId").value = "";
+        $("memoFormTitle").textContent = "New memo";
+        $("memoSubmit").textContent = "Save memo";
+        $("memoCancel").hidden = true;
+    }
+
+    function renderMemos() {
+        const query = $("memoSearch").value.trim().toLowerCase();
+        const filtered = state.memos.filter(m =>
+            !query || ((m.title || "") + " " + m.body).toLowerCase().includes(query));
+
+        $("memoCount").textContent = `${filtered.length} of ${state.memos.length} shown`;
+
+        const list = $("memoList");
+        list.replaceChildren();
+        if (filtered.length === 0) {
+            list.appendChild(el("div", "empty", state.memos.length === 0
+                ? "No memos yet. Write your first thought above."
+                : "No memos match your search."));
+            return;
+        }
+
+        filtered.forEach(m => {
+            const item = el("article", "item");
+            item.appendChild(el("div", "item-sub", formatDate(m.updatedAt || m.createdAt)));
+            if (m.title) item.appendChild(el("h3", "item-word", m.title));
+            const body = el("p", "memo-body", m.body);
+            item.appendChild(body);
+
+            const actions = el("div", "item-actions");
+            const edit = btn("Edit", "pencil", "btn small");
+            edit.type = "button";
+            edit.addEventListener("click", () => {
+                $("memoId").value = m.id;
+                $("memoTitle").value = m.title || "";
+                $("memoBody").value = m.body;
+                $("memoFormTitle").textContent = "Edit memo";
+                $("memoSubmit").textContent = "Update memo";
+                $("memoCancel").hidden = false;
+                $("memoForm").scrollIntoView({ behavior: "smooth", block: "start" });
+                $("memoBody").focus();
+            });
+            const del = btn("Delete", "trash", "btn small danger");
+            del.type = "button";
+            del.addEventListener("click", () => {
+                if (!confirm("Delete this memo?")) return;
+                run(async () => {
+                    await api("/memos/" + m.id, { method: "DELETE" });
+                    await reloadMemos();
+                    showNotice("Memo deleted.");
+                });
+            });
+            actions.append(edit, del);
+            item.appendChild(actions);
+            list.appendChild(item);
+        });
+    }
+
+    $("memoForm").addEventListener("submit", event => {
+        event.preventDefault();
+        const body = { title: $("memoTitle").value, body: $("memoBody").value };
+        if (!body.body.trim()) {
+            showNotice("Write something in the memo first.");
+            return;
+        }
+        const id = $("memoId").value;
+        run(async () => {
+            if (id) {
+                await api("/memos/" + id, { method: "PUT", body: JSON.stringify(body) });
+                showNotice("Memo updated.");
+            } else {
+                await api("/memos", { method: "POST", body: JSON.stringify(body) });
+                showNotice("Memo saved.");
+            }
+            resetMemoForm();
+            await reloadMemos();
+        });
+    });
+
+    $("memoCancel").addEventListener("click", resetMemoForm);
+    $("memoSearch").addEventListener("input", renderMemos);
+
+    // ---------- Explore (expressions) ----------
+
+    function resetExprForm() {
+        $("exprForm").reset();
+        $("exprId").value = "";
+        $("exprFormTitle").textContent = "Add an expression";
+        $("exprSubmit").textContent = "Save expression";
+        $("exprCancel").hidden = true;
+    }
+
+    function renderExpressions() {
+        const query = $("exprSearch").value.trim().toLowerCase();
+        const tags = [...new Set(state.expressions.map(x => x.tag).filter(Boolean))].sort();
+
+        const filters = $("tagFilters");
+        filters.replaceChildren();
+        const tagList = $("tagList");
+        tagList.replaceChildren();
+        tags.forEach(t => tagList.appendChild(new Option(t, t)));
+
+        if (state.exprFilterTag && !tags.includes(state.exprFilterTag)) state.exprFilterTag = "";
+        ["", ...tags].forEach(tag => {
+            const chip = el("button", "filter-chip", tag || "All");
+            chip.type = "button";
+            chip.setAttribute("aria-pressed", String(state.exprFilterTag === tag));
+            chip.addEventListener("click", () => {
+                state.exprFilterTag = tag;
+                renderExpressions();
+            });
+            filters.appendChild(chip);
+        });
+
+        const filtered = state.expressions.filter(x => {
+            if (state.exprFilterTag && x.tag !== state.exprFilterTag) return false;
+            if (!query) return true;
+            return [x.expression, x.meaning, x.example, x.tag].filter(Boolean)
+                .join(" ").toLowerCase().includes(query);
+        });
+
+        $("exprCount").textContent = `${filtered.length} of ${state.expressions.length} shown`;
+
+        const list = $("exprList");
+        list.replaceChildren();
+        if (filtered.length === 0) {
+            list.appendChild(el("div", "empty", state.expressions.length === 0
+                ? "No expressions yet. Save your first one above."
+                : "No expressions match these filters."));
+            return;
+        }
+
+        filtered.forEach(x => {
+            const item = el("article", "item");
+            const head = el("div", "item-head");
+            head.appendChild(el("h3", "item-word", x.expression));
+            if (x.tag) head.appendChild(el("span", "chip", x.tag));
+            item.appendChild(head);
+            if (x.meaning) item.appendChild(el("p", "item-meaning", x.meaning));
+            if (x.example) item.appendChild(el("p", "item-example", x.example));
+
+            const actions = el("div", "item-actions");
+            const edit = btn("Edit", "pencil", "btn small");
+            edit.type = "button";
+            edit.addEventListener("click", () => {
+                $("exprId").value = x.id;
+                $("exprInput").value = x.expression || "";
+                $("exprMeaning").value = x.meaning || "";
+                $("exprExample").value = x.example || "";
+                $("exprTag").value = x.tag || "";
+                $("exprFormTitle").textContent = "Edit expression";
+                $("exprSubmit").textContent = "Update expression";
+                $("exprCancel").hidden = false;
+                $("exprForm").scrollIntoView({ behavior: "smooth", block: "start" });
+                $("exprInput").focus();
+            });
+            const del = btn("Delete", "trash", "btn small danger");
+            del.type = "button";
+            del.addEventListener("click", () => {
+                if (!confirm(`Delete "${x.expression}"?`)) return;
+                run(async () => {
+                    await api("/expressions/" + x.id, { method: "DELETE" });
+                    await reloadExpressions();
+                    showNotice("Expression deleted.");
+                });
+            });
+            actions.append(edit, del);
+            item.appendChild(actions);
+            list.appendChild(item);
+        });
+    }
+
+    $("exprForm").addEventListener("submit", event => {
+        event.preventDefault();
+        const body = {
+            expression: $("exprInput").value,
+            meaning: $("exprMeaning").value,
+            example: $("exprExample").value,
+            tag: $("exprTag").value
+        };
+        if (!body.expression.trim()) {
+            showNotice("Please enter the expression.");
+            return;
+        }
+        const id = $("exprId").value;
+        run(async () => {
+            if (id) {
+                await api("/expressions/" + id, { method: "PUT", body: JSON.stringify(body) });
+                showNotice("Expression updated.");
+            } else {
+                await api("/expressions", { method: "POST", body: JSON.stringify(body) });
+                showNotice("Expression saved.");
+            }
+            resetExprForm();
+            await reloadExpressions();
+        });
+    });
+
+    $("exprCancel").addEventListener("click", resetExprForm);
+    $("exprSearch").addEventListener("input", renderExpressions);
+
+    // ---------- Study & Practice ----------
+
+    function practicePool() {
+        const unlearned = state.words.filter(w => !w.learned);
+        return unlearned.length ? unlearned : state.words;
+    }
+
+    function setPracticeMode(mode) {
+        state.practiceMode = mode;
+        document.querySelectorAll("[data-mode]").forEach(button => {
+            button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
+        });
+        $("practiceFlash").hidden = mode !== "flash";
+        $("practiceSpell").hidden = mode !== "spell";
+        renderPractice();
+    }
+
+    function renderPractice() {
+        const pool = practicePool();
+        const learnedCount = state.words.filter(w => w.learned).length;
+        $("practicePool").textContent = state.words.length === 0
+            ? "Add words in Vocabulary to start practicing."
+            : `${pool.length} to review · ${learnedCount} learned`;
+
+        if (state.practiceMode === "flash") renderFlash(pool);
+        else renderSpell(pool);
+    }
+
+    function renderFlash(pool) {
+        const card = $("flashCard");
+        if (pool.length === 0) {
+            $("fcWord").textContent = "Add words to start practicing";
+            $("fcPron").textContent = "";
+            card.classList.remove("revealed");
+            $("fcStatus").textContent = "";
+            return;
+        }
+        if (state.flashIndex >= pool.length) state.flashIndex = 0;
+        const w = pool[state.flashIndex];
+        $("fcWord").textContent = w.word;
+        $("fcPron").textContent = w.pronunciation || "";
+        $("fcMeaning").textContent = w.meaning;
+        $("fcExample").textContent = w.example ? `${w.example}${w.exampleTranslation ? "\n" + w.exampleTranslation : ""}` : "";
+        card.classList.toggle("revealed", state.flashRevealed);
+        $("fcStatus").textContent = state.flashRevealed
+            ? `${state.flashIndex + 1} of ${pool.length}`
+            : `${state.flashIndex + 1} of ${pool.length} · Tap the card to see the meaning.`;
+    }
+
+    function flipFlash() {
+        if (practicePool().length === 0) return;
+        state.flashRevealed = !state.flashRevealed;
+        renderPractice();
+    }
+
+    function nextFlash() {
+        const pool = practicePool();
+        if (pool.length === 0) return;
+        state.flashIndex = (state.flashIndex + 1) % pool.length;
+        state.flashRevealed = false;
+        renderPractice();
+    }
+
+    $("flashCard").addEventListener("click", flipFlash);
+    $("flashCard").addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            flipFlash();
+        }
+    });
+    $("fcSkip").addEventListener("click", nextFlash);
+    $("fcStill").addEventListener("click", nextFlash);
+    $("fcGot").addEventListener("click", () => {
+        const pool = practicePool();
+        if (pool.length === 0) return;
+        const w = pool[state.flashIndex];
+        run(async () => {
+            await api("/words/" + w.id, {
+                method: "PUT",
+                body: JSON.stringify({ ...wordFields(w), learned: true })
+            });
+            await reloadWords();
+            state.flashRevealed = false;
+            showNotice(`"${w.word}" marked as learned.`);
+        });
+    });
+
+    // Spelling practice
+    function pickSpellWord(pool) {
+        if (pool.length === 0) return null;
+        let next = pool[Math.floor(Math.random() * pool.length)];
+        if (pool.length > 1 && state.spellWord && next.id === state.spellWord.id) {
+            next = pool[(pool.indexOf(next) + 1) % pool.length];
+        }
+        return next;
+    }
+
+    function renderSpell(pool) {
+        if (!state.spellWord || !pool.some(w => w.id === state.spellWord.id)) {
+            state.spellWord = pickSpellWord(pool);
+            $("spellInput").value = "";
+            $("spellResult").textContent = "";
+            $("spellResult").className = "spell-result";
+        }
+        if (!state.spellWord) {
+            $("spellQuestion").textContent = "Add words to start practicing.";
+        } else {
+            const w = state.spellWord;
+            const hidden = w.example ? w.example.replace(new RegExp(escapeRegex(w.word), "gi"), "_____") : "";
+            $("spellQuestion").textContent = `Meaning: ${w.meaning}` + (hidden ? `\nExample: ${hidden}` : "");
+        }
+        $("spellScore").textContent = `Score: ${state.spellScore.correct} / ${state.spellScore.total}`;
+    }
+
+    function escapeRegex(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function checkSpell() {
+        const w = state.spellWord;
+        if (!w) return;
+        const typed = $("spellInput").value.trim().toLowerCase();
+        if (!typed) {
+            $("spellResult").textContent = "Type your answer first.";
+            $("spellResult").className = "spell-result bad";
+            return;
+        }
+        const correct = typed === w.word.trim().toLowerCase();
+        state.spellScore.total += 1;
+        if (correct) state.spellScore.correct += 1;
+        $("spellResult").textContent = correct
+            ? "Correct!"
+            : `Not quite. The answer is "${w.word}".`;
+        $("spellResult").className = "spell-result " + (correct ? "ok" : "bad");
+        $("spellScore").textContent = `Score: ${state.spellScore.correct} / ${state.spellScore.total}`;
+    }
+
+    $("spellCheck").addEventListener("click", checkSpell);
+    $("spellInput").addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            checkSpell();
+        }
+    });
+    $("spellNext").addEventListener("click", () => {
+        state.spellWord = pickSpellWord(practicePool());
+        $("spellInput").value = "";
+        $("spellResult").textContent = "";
+        $("spellResult").className = "spell-result";
+        renderSpell(practicePool());
+    });
+
+    document.querySelectorAll("[data-mode]").forEach(button => {
+        button.addEventListener("click", () => setPracticeMode(button.dataset.mode));
+    });
+
+    // ---------- start ----------
+
+    const initialTab = ["vocab", "memo", "practice", "explore"].includes(location.hash.slice(1))
+        ? location.hash.slice(1) : "vocab";
+    showTab(initialTab);
+    resetWordForm();
+    resetMemoForm();
+    resetExprForm();
+
+    loadAll().catch(error => {
+        console.error(error);
+        showNotice("Could not load your English data. Check the connection and refresh.");
+    });
+</script>
+</body>
+</html>

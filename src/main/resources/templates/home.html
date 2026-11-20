@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lingua Space</title>
 
     <link rel="manifest" href="/manifest.json">
@@ -304,6 +305,11 @@
         }
         [hidden] { display: none !important; }
 
+        .icon { width: 18px; height: 18px; flex-shrink: 0; }
+        .logo { text-decoration: none; color: inherit; }
+        .menu-item { display: flex; align-items: center; gap: 10px; }
+        .m-head { display: none; }
+
         @media (max-width: 760px) {
             .layout { display: block; }
             .sidebar {
@@ -326,6 +332,27 @@
             .language-grid, .language-directory { grid-template-columns: 1fr; gap: 12px; }
             .language-card { padding: 20px; }
             .language-page-header h1 { font-size: 30px; }
+            body { overflow-x: hidden; }
+            .m-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 18px; }
+            .m-head .logo { text-decoration: none; color: inherit; }
+            .m-head .ls-picker-slot { margin: 0; }
+            .sidebar {
+                position: fixed; left: 0; right: 0; bottom: 0; top: auto;
+                width: 100%; height: auto; max-height: none; overflow: visible;
+                padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+                border-top: 1px solid #eaeae5; border-right: none; border-bottom: none;
+                background: #ffffff; z-index: 50;
+            }
+            .sidebar .logo, .sidebar .ls-picker-slot { display: none; }
+            .sidebar nav { flex-direction: row; gap: 2px; overflow: visible; }
+            .menu-item {
+                flex: 1 1 0; width: auto; padding: 8px 2px; font-size: 11px; line-height: 1.25;
+                text-align: center; white-space: normal; border-radius: 10px;
+                flex-direction: column; gap: 3px;
+            }
+            .menu-item .icon { width: 20px; height: 20px; }
+            .main { padding: 20px 16px calc(96px + env(safe-area-inset-bottom)); }
+            input, select, textarea { font-size: 16px !important; }
         }
     </style>
 </head>
@@ -339,15 +366,19 @@
         <div class="ls-picker-slot"><select class="ls-lang-picker" data-lang-picker data-i18n-aria="ui.picker" aria-label="Interface language"></select></div>
         <nav aria-label="Main navigation">
             <div class="menu-title" data-i18n="home.workspace">WORKSPACE</div>
-            <button class="menu-item active" type="button" data-page="home" data-i18n="nav.languageHome">Language Home</button>
-            <a class="menu-item" href="#vocabulary" data-i18n="nav.vocab">My Vocabulary</a>
-            <a class="menu-item" href="#reading" data-i18n="nav.reading">Reading &amp; Expression</a>
-            <a class="menu-item" href="#archive" data-i18n="nav.archive">Learning Archive</a>
-            <button class="menu-item" type="button" data-page="languages" data-i18n="nav.language">Language</button>
+            <button class="menu-item active" type="button" data-page="home"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#home"/></svg><span data-i18n="nav.languageHome">Language Home</span></button>
+            <a class="menu-item" href="#vocabulary"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#book"/></svg><span data-i18n="nav.vocab">My Vocabulary</span></a>
+            <a class="menu-item" href="#reading"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#note"/></svg><span data-i18n="nav.reading">Reading &amp; Expression</span></a>
+            <a class="menu-item" href="#archive"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#archive"/></svg><span data-i18n="nav.archive">Learning Archive</span></a>
+            <button class="menu-item" type="button" data-page="languages"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#globe"/></svg><span data-i18n="nav.language">Language</span></button>
         </nav>
     </aside>
 
     <main class="main">
+        <div class="m-head">
+            <a href="/" class="logo">Lingua <span>Space.</span></a>
+            <div class="ls-picker-slot"><select class="ls-lang-picker" data-lang-picker data-i18n-aria="ui.picker" aria-label="Interface language"></select></div>
+        </div>
         <!-- Home 화면 -->
         <div id="homePage">
             <header class="topline">
@@ -375,28 +406,28 @@
                         <div class="language-name" data-i18n="lang.zh">중국어</div>
                         <div class="language-subtitle">Chinese · 中文</div>
                         <div class="language-description" data-i18n="card.zh.desc">성조와 발음부터 자연스러운 문장까지 차근차근.</div>
-                        <div class="arrow">↗</div>
+                        <div class="arrow" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#arrow-up-right"/></svg></div>
                     </a>
                     <a class="language-card" href="#japanese">
                         <div class="language-icon">あ</div>
                         <div class="language-name" data-i18n="lang.ja">일본어</div>
                         <div class="language-subtitle">Japanese · 日本語</div>
                         <div class="language-description" data-i18n="card.ja.desc">일상에서 쓰이는 표현과 문장의 뉘앙스 익히기.</div>
-                        <div class="arrow">↗</div>
+                        <div class="arrow" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#arrow-up-right"/></svg></div>
                     </a>
                     <a class="language-card" href="#spanish">
                         <div class="language-icon">ñ</div>
                         <div class="language-name" data-i18n="lang.es">스페인어</div>
                         <div class="language-subtitle">Spanish · Español</div>
                         <div class="language-description" data-i18n="card.es.desc">듣고 읽고 말하면서 표현의 폭 넓히기.</div>
-                        <div class="arrow">↗</div>
+                        <div class="arrow" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#arrow-up-right"/></svg></div>
                     </a>
                     <a class="language-card" href="/korean">
                         <div class="language-icon">글</div>
                         <div class="language-name" data-i18n="lang.ko">한국어</div>
                         <div class="language-subtitle">Korean · 한국어</div>
                         <div class="language-description" data-i18n="card.ko.desc">어휘, 관용구, 문장력과 섬세한 표현 기르기.</div>
-                        <div class="arrow">↗</div>
+                        <div class="arrow" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#arrow-up-right"/></svg></div>
                     </a>
                 </div>
             </section>
@@ -425,7 +456,7 @@
             </header>
 
             <label class="language-search-wrap">
-                <span class="search-icon" aria-hidden="true">⌕</span>
+                <span class="search-icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#search"/></svg></span>
                 <input
                     class="language-search-input"
                     id="languageSearch"
@@ -481,6 +512,9 @@
     const listHeading = document.getElementById("listHeading");
     const noResults = document.getElementById("noResults");
     const selectionNote = document.getElementById("selectionNote");
+
+    // Languages that have a full study space open it when their card is tapped
+    const STUDY_PAGES = { english: "/english" };
 
     let activeLanguageId = "all";
     let selectedLanguageId = localStorage.getItem("lingua-space-language-id") || "";
@@ -581,13 +615,17 @@
 
             const check = document.createElement("span");
             check.className = "directory-check";
-            check.textContent = selectedLanguageId === language.id ? "✓" : "";
+            check.innerHTML = selectedLanguageId === language.id ? '<svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#check"/></svg>' : "";
 
             card.append(symbol, info, check);
             card.addEventListener("click", () => {
                 selectedLanguageId = language.id;
                 localStorage.setItem("lingua-space-language-id", selectedLanguageId);
                 noteMode = "picked";
+                if (STUDY_PAGES[language.id]) {
+                    window.location.href = STUDY_PAGES[language.id];
+                    return;
+                }
                 renderDirectory();
                 renderNote();
             });
@@ -631,6 +669,9 @@
     renderTabs();
     renderDirectory();
     renderNote();
+
+    // Back link from a study space returns to the Language tab
+    if (location.hash === "#languages") showPage("languages");
 
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {

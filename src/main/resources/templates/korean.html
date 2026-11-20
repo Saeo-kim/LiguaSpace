@@ -95,6 +95,11 @@
             .archive-head { display: block; }
             .archive-tools { margin-top: 12px; }
         }
+            @media (max-width: 760px) {
+            input, select, textarea { font-size: 16px !important; }
+        }
+        .icon { width: 18px; height: 18px; flex-shrink: 0; }
+        .home-link, .small-button { display: inline-flex; align-items: center; gap: 6px; }
     </style>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#B9A3E8">
@@ -103,11 +108,12 @@
 </head>
 <body>
 <script src="/js/i18n.js"></script>
+<script src="/js/net.js"></script>
 <div class="shell">
     <header class="topbar">
         <div class="brand">LINGUA SPACE <span data-i18n="kr.brandSuffix">/ KOREAN</span></div>
         <div class="ls-picker-slot"><select class="ls-lang-picker" data-lang-picker data-i18n-aria="ui.picker" aria-label="Interface language"></select></div>
-        <a class="home-link" href="/" data-i18n="nav.home">← Home</a>
+        <a class="home-link" href="/"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#arrow-left"/></svg><span data-i18n="nav.home">Home</span></a>
     </header>
 
     <section class="intro">
@@ -194,7 +200,7 @@
                 <div class="hint" id="entryCount" data-i18n="kr.emptyCount">아직 저장된 기록이 없어요.</div>
             </div>
             <div class="archive-tools">
-                <button class="small-button" id="exportButton" type="button" data-i18n="kr.export">기록 내보내기</button>
+                <button class="small-button" id="exportButton" type="button"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#download"/></svg><span data-i18n="kr.export">기록 내보내기</span></button>
             </div>
         </div>
         <div class="filters">
@@ -220,11 +226,12 @@
     const searchInput = document.getElementById("searchInput");
     const filterType = document.getElementById("filterType");
 
-    let entries = [];
+    // null = still loading (shown as a loading state, not as "no records")
+    let entries = null;
 
     // 서버 응답 처리
     async function request(url, options = {}) {
-        const response = await fetch(url, options);
+        const response = await LSNet.track(fetch(url, options));
 
         if (!response.ok) {
             throw new Error(`서버 오류: ${response.status}`);
@@ -314,6 +321,12 @@
 
     // 화면에 기록 표시
     function renderEntries() {
+        if (entries === null) {
+            document.getElementById("entryCount").textContent = LS.t("kr.loading");
+            entriesElement.innerHTML = `<div class="empty">${LS.t("kr.loading")}</div>`;
+            return;
+        }
+
         const query = searchInput.value.trim().toLowerCase();
         const type = filterType.value;
 
@@ -385,7 +398,8 @@
         };
 
         try {
-            await request(API_URL, {
+            // The POST returns the saved entry, so the list is updated locally instead of refetched
+            const created = await request(API_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -394,7 +408,7 @@
             });
 
             form.reset();
-            entries = await request(API_URL);
+            entries = [created, ...(entries || [])];
             renderEntries();
 
         } catch (error) {
@@ -418,7 +432,7 @@
                 method: "DELETE"
             });
 
-            entries = await request(API_URL);
+            entries = entries.filter(entry => String(entry.id) !== id);
             renderEntries();
 
         } catch (error) {
