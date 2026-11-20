@@ -21,4 +21,9 @@ public class HomeController {
     public String korean() {
         return "korean";
     }
+
+    @GetMapping("/english")
+    public String english() {
+        return "english";
+    }
 }
