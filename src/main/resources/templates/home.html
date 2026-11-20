@@ -507,6 +507,9 @@
     const noResults = document.getElementById("noResults");
     const selectionNote = document.getElementById("selectionNote");
 
+    // Languages that have a full study space open it when their card is tapped
+    const STUDY_PAGES = { english: "/english" };
+
     let activeLanguageId = "all";
     let selectedLanguageId = localStorage.getItem("lingua-space-language-id") || "";
     let noteMode = languages.some(language => language.id === selectedLanguageId) ? "saved" : "default";
@@ -613,6 +616,10 @@
                 selectedLanguageId = language.id;
                 localStorage.setItem("lingua-space-language-id", selectedLanguageId);
                 noteMode = "picked";
+                if (STUDY_PAGES[language.id]) {
+                    window.location.href = STUDY_PAGES[language.id];
+                    return;
+                }
                 renderDirectory();
                 renderNote();
             });
@@ -656,6 +663,9 @@
     renderTabs();
     renderDirectory();
     renderNote();
+
+    // Back link from a study space returns to the Language tab
+    if (location.hash === "#languages") showPage("languages");
 
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
